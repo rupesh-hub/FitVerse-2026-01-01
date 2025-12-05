@@ -9,15 +9,6 @@ pipeline {
     }
 
     stages {
-        stage("Install Node & npm") {
-            steps {
-                sh '''
-                    apk add --no-cache nodejs npm bash curl
-                    node -v
-                    npm -v
-                '''
-            }
-        }
 
         stage("Checkout repository") {
             steps {
@@ -37,17 +28,6 @@ pipeline {
                     }
                 }
                 echo "✔ Frontend version: ${env.PROJECT_VERSION}"
-            }
-        }
-
-        stage("Install dependencies & Build Angular") {
-            steps {
-                dir('frontend') {
-                    sh '''
-                        npm ci
-                        npm run build -- --configuration production
-                    '''
-                }
             }
         }
 
