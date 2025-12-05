@@ -98,7 +98,7 @@
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/resources/data.sql" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/resources/templates/callback.html" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/test/java/com/alfarays/ResourceServerApplicationTests.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/environments/environments.production.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deployment/backend/Jenkins-setup.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/.gitattributes" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/deployment/docker/Dockerfile" afterDir="false" />
@@ -246,10 +246,7 @@
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/deployment/backend/Jenkinsfile" beforeDir="false" afterPath="$PROJECT_DIR$/deployment/backend/Jenkinsfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker/frontend/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/docker/frontend/readme.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/angular.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/nginx.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/environments/environments.prod.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deployment/frontend/Jenkinsfile" beforeDir="false" afterPath="$PROJECT_DIR$/deployment/frontend/Jenkinsfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DEVOPS/DAY-01/backend/src/main/resources/application-dev.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/Main.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/TwoDArray.java" beforeDir="false" />
@@ -452,7 +449,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1764850177322</updated>
-      <workItem from="1764850180738" duration="17898000" />
+      <workItem from="1764850180738" duration="19293000" />
     </task>
     <servers />
   </component>

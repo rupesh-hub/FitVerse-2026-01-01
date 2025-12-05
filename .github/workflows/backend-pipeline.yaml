@@ -3,7 +3,7 @@ name: FitVerse backend pipeline
 on:
   push:
     branches:
-      - main
+      - dev
     paths:
       - backend/**
       - docker/backend/Dockerfile

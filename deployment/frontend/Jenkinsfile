@@ -1,0 +1,99 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB_CREDENTIALS_ID = 'docker-hub-credentials'
+        DOCKER_REPO = 'rupesh1997'
+        PROJECT_NAME = 'fit-verse-frontend'
+        PROJECT_VERSION = ''
+    }
+
+    stages {
+
+        stage("Checkout repository") {
+            steps {
+                git url: 'https://github.com/rupesh-hub/FirVerse.git', branch: 'main'
+            }
+        }
+
+        stage("Extract project version") {
+            steps {
+                dir('frontend') {
+                    script {
+                        // Uses jq to extract version from package.json
+                        env.PROJECT_VERSION = sh(
+                            script: "jq -r .version package.json",
+                            returnStdout: true
+                        ).trim()
+                    }
+                }
+                echo "✔ Frontend version extracted: ${env.PROJECT_VERSION}"
+            }
+        }
+
+        stage("Install dependencies & Build Angular") {
+            steps {
+                dir('frontend') {
+                    sh """
+                        npm ci
+                        npm run build -- --configuration production
+                    """
+                }
+            }
+        }
+
+        stage("Build Docker Image") {
+            steps {
+                echo "Building Docker image..."
+                sh """
+                    docker build \
+                      -t ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION} \
+                      -t ${DOCKER_REPO}/${PROJECT_NAME}:latest \
+                      -f ./docker/frontend/Dockerfile .
+                """
+            }
+        }
+
+        stage("Trivy Scan") {
+            steps {
+                echo "🔍 Running Trivy vulnerability scan..."
+                sh """
+                    trivy image --exit-code 0 \
+                        --severity HIGH,CRITICAL \
+                        ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION}
+                """
+            }
+        }
+
+        stage("Login to Docker Hub") {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: env.DOCKER_HUB_CREDENTIALS_ID,
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASSWORD'
+                )]) {
+                    sh "echo '${DOCKER_PASSWORD}' | docker login -u ${DOCKER_USER} --password-stdin"
+                }
+            }
+        }
+
+        stage("Push Docker Images") {
+            steps {
+                sh "docker push ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION}"
+                sh "docker push ${DOCKER_REPO}/${PROJECT_NAME}:latest"
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            echo "🎉 Frontend pipeline completed successfully!"
+        }
+        failure {
+            echo "❌ Frontend pipeline failed. Check logs."
+        }
+    }
+}

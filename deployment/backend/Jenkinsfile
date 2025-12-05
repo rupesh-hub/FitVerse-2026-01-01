@@ -3,70 +3,101 @@ pipeline {
 
     environment {
         DOCKER_HUB_CREDENTIALS_ID = 'docker-hub-credentials'
-        DEPLOYMENT_CREDENTIALS_ID = 'ssh-deploy-key'
-        DOCKER_REPO = 'rupesh-hub'
-        EMAIL_RECIPIENTS = 'devops-team@fitverse.com'
+        DOCKER_REPO = 'rupesh1997'
         PROJECT_VERSION = ''
     }
 
     stages {
 
-        stage("Checkout repository"){
-            steps{
+        stage("Cleanup Workspace") {
+            steps {
+                deleteDir()
+                echo "Workspace cleaned successfully."
+            }
+        }
+
+        stage("Checkout repository") {
+            steps {
                 git url: 'https://github.com/rupesh-hub/FirVerse.git', branch: 'main'
-            }
-        }
-
-        stage("Build project") {
-            steps {
-                echo 'Building the project JAR...'
-                sh './mvnw clean package'
-            }
-        }
-
-        stage("Unit tests") {
-            steps {
-                echo 'Running unit tests...'
-                sh './mvnw test'
-                junit '**/target/surefire-reports/TEST-*.xml'
             }
         }
 
         stage("Extract project version") {
             steps {
-                script {
-                    env.PROJECT_VERSION = sh(
-                        script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
-                        returnStdout: true
-                    ).trim()
-                    echo "Extracted project version: ${env.PROJECT_VERSION}"
+                dir('backend') {
+                    script {
+                        env.PROJECT_VERSION = sh(
+                            script: """
+                                ./mvnw help:evaluate \
+                                -Dexpression=project.version \
+                                -q -DforceStdout
+                            """,
+                            returnStdout: true
+                        ).trim()
+                    }
+                }
+                echo "✔ Extracted project version: ${env.PROJECT_VERSION}"
+            }
+        }
+
+        stage("Build & Test") {
+            parallel {
+                stage("Build") {
+                    steps {
+                        dir('backend') {
+                            sh "./mvnw clean package -DskipTests"
+                        }
+                    }
+                }
+
+                stage("Unit tests") {
+                    steps {
+                        dir('backend') {
+                            sh "./mvnw test"
+                        }
+                        junit '**/target/surefire-reports/TEST-*.xml'
+                    }
                 }
             }
         }
 
-        stage("Build docker image") {
+        stage("Build Docker Image") {
             steps {
-                echo 'Building Docker image...'
-                sh "docker build -t ${DOCKER_REPO}/fit-verse-backend:${PROJECT_VERSION} -t ${DOCKER_REPO}/fit-verse-backend:latest ."
+                echo "Building Docker image..."
+                sh """
+                    docker build \
+                      -t ${DOCKER_REPO}/fit-verse-backend:${PROJECT_VERSION} \
+                      -t ${DOCKER_REPO}/fit-verse-backend:latest \
+                      -f docker/backend/Dockerfile .
+                """
             }
         }
 
-        stage("Login to docker hub") {
+        stage("Trivy Vulnerability Scan") {
             steps {
-                echo 'Logging into Docker Hub...'
+                echo "🔍 Running Trivy image scan..."
+                sh """
+                    trivy image --exit-code 0 \
+                        --severity HIGH,CRITICAL \
+                        ${DOCKER_REPO}/fit-verse-backend:${PROJECT_VERSION}
+                """
+            }
+        }
+
+        stage("Docker Hub Login") {
+            steps {
                 withCredentials([usernamePassword(
                     credentialsId: env.DOCKER_HUB_CREDENTIALS_ID,
-                    passwordVariable: 'DOCKER_PASSWORD',
-                    usernameVariable: 'DOCKER_USER'
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASSWORD'
                 )]) {
-                    sh "docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}"
+                    sh "echo '${DOCKER_PASSWORD}' | docker login -u ${DOCKER_USER} --password-stdin"
                 }
             }
         }
 
-        stage("Push image to docker hub") {
+        stage("Push Docker Images") {
             steps {
-                echo 'Pushing Docker images...'
                 sh "docker push ${DOCKER_REPO}/fit-verse-backend:${PROJECT_VERSION}"
                 sh "docker push ${DOCKER_REPO}/fit-verse-backend:latest"
             }
@@ -74,45 +105,27 @@ pipeline {
 
         stage("Deployment") {
             steps {
-                echo 'Initiating deployment to staging/production...'
-                sh "echo 'Deployment completed for version ${PROJECT_VERSION}'"
+                echo "🚀 Deploying application..."
+                sh """
+                    docker-compose -f docker/docker-compose/production/docker-compose.yaml pull
+                    docker-compose -f docker/docker-compose/production/docker-compose.yaml down --remove-orphans
+                    docker-compose -f docker/docker-compose/production/docker-compose.yaml up -d
+                    docker container prune -f
+                """
             }
         }
-
     }
 
-    // Post-build actions: Email notification setup
     post {
         always {
-            // Clean up workspace to save disk space
+            echo "Cleaning workspace..."
             cleanWs()
         }
         success {
-            mail(
-                to: env.EMAIL_RECIPIENTS,
-                subject: "SUCCESS: FitVerse Backend Pipeline #${currentBuild.number}",
-                body: "The FitVerse Backend build and deployment was successful! Version: ${env.PROJECT_VERSION}\n" +
-                      "View details: ${env.BUILD_URL}"
-            )
+            echo "🎉 Pipeline executed successfully!"
         }
         failure {
-             mail(
-                to: env.EMAIL_RECIPIENTS,
-                subject: "FAILURE: FitVerse Backend Pipeline #${currentBuild.number}",
-                body: "The FitVerse Backend pipeline failed!\n" +
-                      "Stage: ${STAGE_NAME}\n" +
-                      "View details: ${env.BUILD_URL}",
-                // Send the email even if the mail server configuration itself is unstable
-                failLogOnly: true
-            )
-        }
-        unstable {
-            mail(
-                to: env.EMAIL_RECIPIENTS,
-                subject: "UNSTABLE: FitVerse Backend Pipeline #${currentBuild.number}",
-                body: "The FitVerse Backend pipeline finished unstable (e.g., tests failed or skipped, but build succeeded).\n" +
-                      "View details: ${env.BUILD_URL}"
-            )
+            echo "❌ Pipeline failed. Please check logs."
         }
     }
 }
