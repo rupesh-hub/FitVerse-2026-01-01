@@ -1,5 +1,11 @@
 pipeline {
-    agent any
+    agent {
+        // Use official Node.js Docker image for frontend builds
+        docker {
+            image 'node:20-alpine'
+            args '-u root' // run as root to install dependencies if needed
+        }
+    }
 
     environment {
         DOCKER_HUB_CREDENTIALS_ID = 'docker-hub-credentials'
@@ -20,9 +26,9 @@ pipeline {
             steps {
                 dir('frontend') {
                     script {
-                        // Uses jq to extract version from package.json
+                        // Extract version from package.json using node (no jq needed)
                         env.PROJECT_VERSION = sh(
-                            script: "jq -r .version package.json",
+                            script: "node -p \"require('./package.json').version\"",
                             returnStdout: true
                         ).trim()
                     }
@@ -47,16 +53,16 @@ pipeline {
                 echo "Building Docker image..."
                 sh """
                     docker build \
-                      -t ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION} \
-                      -t ${DOCKER_REPO}/${PROJECT_NAME}:latest \
-                      -f ./docker/frontend/Dockerfile .
+                        -t ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION} \
+                        -t ${DOCKER_REPO}/${PROJECT_NAME}:latest \
+                        -f ./docker/frontend/Dockerfile .
                 """
             }
         }
 
-        stage("Trivy Scan") {
+        stage("Trivy Vulnerability Scan") {
             steps {
-                echo "🔍 Running Trivy vulnerability scan..."
+                echo "🔍 Running Trivy scan on Docker image..."
                 sh """
                     trivy image --exit-code 0 \
                         --severity HIGH,CRITICAL \
@@ -83,17 +89,19 @@ pipeline {
                 sh "docker push ${DOCKER_REPO}/${PROJECT_NAME}:latest"
             }
         }
+
     }
 
     post {
         always {
+            echo "Cleaning workspace..."
             cleanWs()
         }
         success {
             echo "🎉 Frontend pipeline completed successfully!"
         }
         failure {
-            echo "❌ Frontend pipeline failed. Check logs."
+            echo "❌ Frontend pipeline failed. Check the logs."
         }
     }
 }
