@@ -47,10 +47,11 @@ pipeline {
             steps {
                 echo "🛠 Building Docker image..."
                 sh """
+                    cd backend
                     docker build \
                       -t ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION} \
                       -t ${DOCKER_REPO}/${PROJECT_NAME}:latest \
-                      -f docker/backend/Dockerfile .
+                      -f ../docker/backend/Dockerfile .
                 """
             }
         }
@@ -59,7 +60,8 @@ pipeline {
             steps {
                 echo "🔍 Running Trivy scan..."
                 sh """
-                    trivy image --exit-code 1 \
+                    cd backend
+                    trivy image --exit-code 0 \
                         --severity HIGH,CRITICAL \
                         ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION} || true
                 """

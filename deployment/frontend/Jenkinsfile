@@ -16,21 +16,6 @@ pipeline {
             }
         }
 
-        stage("Extract project version") {
-            steps {
-                dir('frontend') {
-                    script {
-                        env.PROJECT_VERSION = sh(
-                            script: "node -p \"require('./package.json').version\" || echo ''",
-                            returnStdout: true
-                        ).trim()
-                        if (!env.PROJECT_VERSION) { env.PROJECT_VERSION = "1.0.0" }
-                    }
-                }
-                echo "✔ Frontend version: ${env.PROJECT_VERSION}"
-            }
-        }
-
         stage("Build Docker Image") {
             steps {
                 sh """
@@ -78,5 +63,18 @@ pipeline {
                       """
             }
         }
+    }
+
+    post {
+       always {
+          echo "🧹 Cleaning workspace..."
+          cleanWs()
+       }
+       success {
+          echo "🎉 Backend pipeline completed successfully!"
+       }
+       failure {
+          echo "❌ Backend pipeline failed. Check logs for details."
+       }
     }
 }
