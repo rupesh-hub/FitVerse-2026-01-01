@@ -1,8 +1,8 @@
 pipeline {
     agent {
         docker {
-            image 'node:20-alpine'
-            args '-u root'
+            image 'node:20-alpine'   // Node.js for Angular build
+            args '--privileged -v /var/lib/docker:/var/lib/docker -u root'
         }
     }
 
@@ -25,8 +25,9 @@ pipeline {
             steps {
                 dir('frontend') {
                     script {
+                        // Extract version from package.json using Node
                         env.PROJECT_VERSION = sh(
-                            script: "jq -r .version package.json || echo ''",
+                            script: "node -p \"require('./package.json').version\" || echo ''",
                             returnStdout: true
                         ).trim()
 
@@ -37,7 +38,7 @@ pipeline {
                         }
                     }
                 }
-                echo "✔ Frontend version extracted: ${env.PROJECT_VERSION}"
+                echo "✔ Frontend project version: ${env.PROJECT_VERSION}"
             }
         }
 
@@ -54,7 +55,7 @@ pipeline {
 
         stage("Build Docker Image") {
             steps {
-                echo "Building Docker image..."
+                echo "🛠 Building Docker image..."
                 sh """
                     docker build \
                         -t ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION} \
@@ -66,7 +67,7 @@ pipeline {
 
         stage("Trivy Vulnerability Scan") {
             steps {
-                echo "🔍 Running Trivy scan on Docker image..."
+                echo "🔍 Running Trivy scan..."
                 sh """
                     trivy image --exit-code 0 \
                         --severity HIGH,CRITICAL \
@@ -75,7 +76,7 @@ pipeline {
             }
         }
 
-        stage("Login to Docker Hub") {
+        stage("Docker Hub Login") {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: env.DOCKER_HUB_CREDENTIALS_ID,
@@ -98,7 +99,7 @@ pipeline {
 
     post {
         always {
-            echo "Cleaning workspace..."
+            echo "🧹 Cleaning workspace..."
             cleanWs()
         }
         success {
