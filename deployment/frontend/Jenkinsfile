@@ -19,10 +19,11 @@ pipeline {
         stage("Build Docker Image") {
             steps {
                 sh """
+                    cd frontend
                     docker build \
                         -t ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION} \
                         -t ${DOCKER_REPO}/${PROJECT_NAME}:latest \
-                        -f ./docker/frontend/Dockerfile .
+                        -f ../docker/frontend/Dockerfile .
                 """
             }
         }

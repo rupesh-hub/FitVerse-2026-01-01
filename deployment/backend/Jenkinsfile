@@ -92,10 +92,10 @@ pipeline {
             steps {
                 echo "⚡ Deploying backend application..."
                 sh """
+                    docker system prune -f
                     docker-compose -f docker/docker-compose/production/docker-compose.yaml pull
                     docker-compose -f docker/docker-compose/production/docker-compose.yaml down --remove-orphans
                     docker-compose -f docker/docker-compose/production/docker-compose.yaml up -d
-                    docker container prune -f
                 """
             }
         }
