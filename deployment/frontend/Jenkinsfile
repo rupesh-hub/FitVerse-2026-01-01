@@ -10,7 +10,7 @@ pipeline {
         DOCKER_HUB_CREDENTIALS_ID = 'docker-hub-credentials'
         DOCKER_REPO = 'rupesh1997'
         PROJECT_NAME = 'fit-verse-frontend'
-        PROJECT_VERSION = ''
+        PROJECT_VERSION = '1.0.0'
     }
 
     stages {
@@ -26,9 +26,15 @@ pipeline {
                 dir('frontend') {
                     script {
                         env.PROJECT_VERSION = sh(
-                            script: "jq -r .version package.json",
+                            script: "jq -r .version package.json || echo ''",
                             returnStdout: true
                         ).trim()
+
+                        // Set default if version is null or empty
+                        if (!env.PROJECT_VERSION) {
+                            echo "⚠ Version not found in package.json, using default 1.0.0"
+                            env.PROJECT_VERSION = "1.0.0"
+                        }
                     }
                 }
                 echo "✔ Frontend version extracted: ${env.PROJECT_VERSION}"

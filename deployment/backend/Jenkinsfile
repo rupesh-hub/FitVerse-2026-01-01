@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS_ID = 'docker-hub-credentials'
         DOCKER_REPO = 'rupesh1997'
+        PROJECT_NAME = 'fit-verse-backend'
         PROJECT_VERSION = ''
     }
 
@@ -12,7 +13,7 @@ pipeline {
         stage("Cleanup Workspace") {
             steps {
                 deleteDir()
-                echo "Workspace cleaned successfully."
+                echo "✅ Workspace cleaned successfully."
             }
         }
 
@@ -26,13 +27,20 @@ pipeline {
             steps {
                 dir('backend') {
                     script {
+                        // Extract version using Maven exec plugin
                         env.PROJECT_VERSION = sh(
                             script: './mvnw -q -Dexec.executable=echo -Dexec.args=${project.version} --non-recursive exec:exec',
                             returnStdout: true
                         ).trim()
+
+                        // Set default if extraction fails
+                        if (!env.PROJECT_VERSION) {
+                            echo "⚠ Version not found in pom.xml, using default 1.0.0"
+                            env.PROJECT_VERSION = "1.0.0"
+                        }
                     }
                 }
-                echo "✔ Extracted backend project version: ${env.PROJECT_VERSION}"
+                echo "✔ Backend project version: ${env.PROJECT_VERSION}"
             }
         }
 
@@ -58,11 +66,11 @@ pipeline {
 
         stage("Build Docker Image") {
             steps {
-                echo "Building Docker image..."
+                echo "🛠 Building Docker image..."
                 sh """
                     docker build \
-                      -t ${DOCKER_REPO}/fit-verse-backend:${PROJECT_VERSION} \
-                      -t ${DOCKER_REPO}/fit-verse-backend:latest \
+                      -t ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION} \
+                      -t ${DOCKER_REPO}/${PROJECT_NAME}:latest \
                       -f docker/backend/Dockerfile .
                 """
             }
@@ -70,11 +78,11 @@ pipeline {
 
         stage("Trivy Vulnerability Scan") {
             steps {
-                echo "🔍 Running Trivy image scan..."
+                echo "🔍 Running Trivy scan..."
                 sh """
-                    trivy image --exit-code 0 \
+                    trivy image --exit-code 1 \
                         --severity HIGH,CRITICAL \
-                        ${DOCKER_REPO}/fit-verse-backend:${PROJECT_VERSION}
+                        ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION} || true
                 """
             }
         }
@@ -93,14 +101,15 @@ pipeline {
 
         stage("Push Docker Images") {
             steps {
-                sh "docker push ${DOCKER_REPO}/fit-verse-backend:${PROJECT_VERSION}"
-                sh "docker push ${DOCKER_REPO}/fit-verse-backend:latest"
+                echo "🚀 Pushing Docker images..."
+                sh "docker push ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION}"
+                sh "docker push ${DOCKER_REPO}/${PROJECT_NAME}:latest"
             }
         }
 
         stage("Deployment") {
             steps {
-                echo "🚀 Deploying application..."
+                echo "⚡ Deploying backend application..."
                 sh """
                     docker-compose -f docker/docker-compose/production/docker-compose.yaml pull
                     docker-compose -f docker/docker-compose/production/docker-compose.yaml down --remove-orphans
@@ -109,18 +118,19 @@ pipeline {
                 """
             }
         }
+
     }
 
     post {
         always {
-            echo "Cleaning workspace..."
+            echo "🧹 Cleaning workspace..."
             cleanWs()
         }
         success {
-            echo "🎉 Pipeline executed successfully!"
+            echo "🎉 Backend pipeline completed successfully!"
         }
         failure {
-            echo "❌ Pipeline failed. Please check logs."
+            echo "❌ Backend pipeline failed. Check logs for details."
         }
     }
 }
