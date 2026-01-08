@@ -18,13 +18,15 @@ spec:
       initContainers:
         - name: wait-for-mysql
           image: busybox:1.28
-          command: ['sh', '-c', "until nc -zv mysql 3306; do echo waiting for mysql; sleep 2; done"]
+          command: [ 'sh', '-c', "until nc -zv mysql 3306; do echo waiting for mysql; sleep 2; done" ]
       containers:
         - name: fitverse-backend
           image: rupesh1997/fitverse-backend:1.0.1
           ports:
             - containerPort: 8181
           env:
+            - name: APPLICATION_CORS_ORIGINS
+              value: "http://192.168.1.70:4200"
             - name: SPRING_PROFILES_ACTIVE
               valueFrom:
                 configMapKeyRef:
