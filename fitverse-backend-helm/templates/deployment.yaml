@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.serviceName }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.serviceName }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.serviceName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.serviceName }}
+    spec:
+      containers:
+        - name: {{ .Values.serviceName }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: APPLICATION_CORS_ORIGINS
+              value: {{ .Values.environment.APPLICATION_CORS_ORIGINS }}
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.environment.SPRING_PROFILES_ACTIVE }}
+            - name: SPRING_DATASOURCE_URL
+              value: {{ .Values.environment.SPRING_DATASOURCE_URL }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: {{ .Values.environment.SPRING_DATASOURCE_PASSWORD }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-backend
+  labels:
+    app: {{ .Chart.Name }}-backend
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}-backend
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}-backend
+    spec:
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          env:
+            - name: APPLICATION_CORS_ORIGINS
+              value: "{{ .Values.backend.environment.APPLICATION_CORS_ORIGINS }}"
+            - name: SPRING_PROFILES_ACTIVE
+              value: "{{ .Values.backend.environment.SPRING_PROFILES_ACTIVE }}"
+            - name: SPRING_DATASOURCE_URL
+              value: "{{ .Values.backend.environment.SPRING_DATASOURCE_URL }}"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "{{ .Values.backend.environment.SPRING_DATASOURCE_USERNAME }}"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "{{ .Values.backend.environment.SPRING_DATASOURCE_PASSWORD }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.backend.service.containerPort }}
+          {{- with .Values.backend.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+

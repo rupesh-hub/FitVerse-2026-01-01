@@ -1,0 +1,6 @@
+apiVersion: v2
+name: fitverse-backend
+description: A Helm chart for fitverse backend
+type: application
+version: 0.1.0
+appVersion: "1.16.0"
