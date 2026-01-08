@@ -64,8 +64,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/fit-verse-backend:${{ steps.extract_version.outputs.VERSION }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/fit-verse-backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/fitverse-backend:${{ steps.extract_version.outputs.VERSION }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/fitverse-backend:latest
           build-args: |
             PROJECT_VERSION=${{ steps.extract_version.outputs.VERSION }}
             ACTIVE_PROFILE=production
@@ -97,12 +97,12 @@ jobs:
           DOCKER_COMPOSE_PATH="docker/docker-compose/docker/docker-compose.yaml"
           DEFAULT_COMPOSE_PATH="docker/docker-compose/default/docker-compose.yaml"
           K8S_PATH="kubernetes/backend-deployment.yaml"
-          IMAGE_NAME="$USER/fit-verse-backend:$VERSION"
+          IMAGE_NAME="$USER/fitverse-backend:$VERSION"
 
           # 1. Update Docker Compose using yq (Targeting the backend service specifically)
-          yq -i ".services.fit-verse-backend.image = \"$IMAGE_NAME\"" "$PROD_COMPOSE_PATH"
-          yq -i ".services.fit-verse-backend.image = \"$IMAGE_NAME\"" "$DOCKER_COMPOSE_PATH"
-          yq -i ".services.fit-verse-backend.image = \"$IMAGE_NAME\"" "$DEFAULT_COMPOSE_PATH"
+          yq -i ".services.fitverse-backend.image = \"$IMAGE_NAME\"" "$PROD_COMPOSE_PATH"
+          yq -i ".services.fitverse-backend.image = \"$IMAGE_NAME\"" "$DOCKER_COMPOSE_PATH"
+          yq -i ".services.fitverse-backend.image = \"$IMAGE_NAME\"" "$DEFAULT_COMPOSE_PATH"
 
           # 2. Update Kubernetes (Targeting the backend container name)
           yq -i "(.spec.template.spec.containers[] | select(.name == \"fitverse-backend\") | .image) = \"$IMAGE_NAME\"" "$K8S_PATH"

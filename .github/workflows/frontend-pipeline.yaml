@@ -42,8 +42,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/fit-verse-frontend:${{ steps.extract_version.outputs.VERSION }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/fit-verse-frontend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/fitverse-frontend:${{ steps.extract_version.outputs.VERSION }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/fitverse-frontend:latest
 
   update-deployments:
     needs: [ build ]
@@ -60,14 +60,14 @@ jobs:
           VERSION: ${{ needs.build.outputs.VERSION }}
           USER: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
-          IMAGE_NAME="$USER/fit-verse-frontend:$VERSION"
+          IMAGE_NAME="$USER/fitverse-frontend:$VERSION"
           K8S_PATH="kubernetes/frontend-deployment.yaml"
           PROD_COMPOSE_PATH="docker/docker-compose/production/docker-compose.yaml"
           
           # 1. Update Docker Compose (Service Specific)
-          yq -i ".services.fit-verse-frontend.image = \"$IMAGE_NAME\"" "$PROD_COMPOSE_PATH"
-          yq -i ".services.fit-verse-frontend.image = \"$IMAGE_NAME\"" docker/docker-compose/default/docker-compose.yaml
-          yq -i ".services.fit-verse-frontend.image = \"$IMAGE_NAME\"" docker/docker-compose/docker/docker-compose.yaml
+          yq -i ".services.fitverse-frontend.image = \"$IMAGE_NAME\"" "$PROD_COMPOSE_PATH"
+          yq -i ".services.fitverse-frontend.image = \"$IMAGE_NAME\"" docker/docker-compose/default/docker-compose.yaml
+          yq -i ".services.fitverse-frontend.image = \"$IMAGE_NAME\"" docker/docker-compose/docker/docker-compose.yaml
           
           # 2. Update Kubernetes (Targeted by container name) - containers:name
           sed -i "/name: fitverse-frontend/,/image:/ s|image:.*|image: $IMAGE_NAME|" "$K8S_PATH"

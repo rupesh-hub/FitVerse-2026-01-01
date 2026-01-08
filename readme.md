@@ -15,3 +15,9 @@ OR
   run: |
     docker compose build
 ```
+
+```shell
+# Forgot to pull before push
+git pull --rebase origin main
+git push -U origin main
+```

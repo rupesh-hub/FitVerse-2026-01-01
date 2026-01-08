@@ -24,8 +24,8 @@ spec:
             - sh
             - -c
             - |
-              echo "Checking backend health at http://fitverse-backend-service:8181/api/v1.0.0/fit-verse/actuator"
-              until curl -f http://fitverse-backend-service:8181/api/v1.0.0/fit-verse/actuator/health 2>/dev/null; do
+              echo "Checking backend health at http://fitverse-backend:8181/api/v1.0.0/fit-verse/actuator"
+              until curl -f http://fitverse-backend:8181/api/v1.0.0/fit-verse/actuator/health 2>/dev/null; do
                 echo "Backend is unavailable - sleeping"
                 sleep 5
               done
@@ -33,7 +33,7 @@ spec:
 
       containers:
         - name: fitverse-frontend
-          image: rupesh1997/fit-verse-frontend:1.0.0
+          image: rupesh1997/fitverse-frontend:1.0.0
           ports:
             - containerPort: 8080
           resources:

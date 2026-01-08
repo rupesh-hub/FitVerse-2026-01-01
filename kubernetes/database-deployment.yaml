@@ -3,8 +3,6 @@ kind: StatefulSet
 metadata:
   name: mysql
   namespace: fitverse
-  labels:
-    app: mysql
 spec:
   serviceName: mysql
   replicas: 1
@@ -16,59 +14,31 @@ spec:
       labels:
         app: mysql
     spec:
-      securityContext:
-        fsGroup: 999  # MySQL container user group
-        fsGroupChangePolicy: "OnRootMismatch"
-
       containers:
         - name: mysql
           image: mysql:8.0
-          securityContext:
-            runAsUser: 999
-            runAsGroup: 999
-            runAsNonRoot: true
-            allowPrivilegeEscalation: false
-          resources:
-            requests:
-              memory: "512Mi"
-              cpu: "200m"
-            limits:
-              memory: "1Gi"
-              cpu: "500m"
           ports:
             - containerPort: 3306
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: SPRING_DATASOURCE_PASSWORD
                   name: fitverse-secrets
+                  key: SPRING_DATASOURCE_PASSWORD
             - name: MYSQL_DATABASE
               valueFrom:
                 configMapKeyRef:
                   key: DATABASE_NAME
                   name: fitverse-config
           volumeMounts:
-            - mountPath: /var/lib/mysql
-              name: mysql-pv-storage
-              subPath: mysql-data
-          livenessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - "mysqladmin ping -u root -p$MYSQL_ROOT_PASSWORD"
-            initialDelaySeconds: 30
-            periodSeconds: 10
-          readinessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - "mysqladmin ping -u root -p$MYSQL_ROOT_PASSWORD"
-            initialDelaySeconds: 10
-            periodSeconds: 5
-      volumes:
-        - name: mysql-pv-storage
-          persistentVolumeClaim:
-            claimName: fitverse-pvc
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+    - metadata:
+        name: mysql-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi

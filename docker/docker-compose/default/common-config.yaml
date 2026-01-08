@@ -1,4 +1,4 @@
 services:
   network-configuration:
     networks:
-      - fit-verse-network
+      - fitverse-network

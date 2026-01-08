@@ -1,7 +1,8 @@
 services:
-  fit-verse-backend:
-    image: "rupesh1997/fit-verse-backend:1.0.1"
-    container_name: fit-verse-backend
+
+  fitverse-backend:
+    image: "rupesh1997/fitverse-backend:1.0.1"
+    container_name: fitverse-backend
     ports:
       - "9090:9090"
     environment:
@@ -9,11 +10,12 @@ services:
     extends:
       file: common-config.yaml
       service: network-configuration
-  fit-verse-frontend:
-    image: "rupesh1997/fit-verse-frontend:1.0.0"
-    container_name: fit-verse-frontend
+
+  fitverse-frontend:
+    image: "rupesh1997/fitverse-frontend:1.0.0"
+    container_name: fitverse-frontend
     depends_on:
-      fit-verse-backend:
+      fitverse-backend:
         condition: service_started
     ports:
       - "8080:8080"
@@ -21,5 +23,5 @@ services:
       file: common-config.yaml
       service: network-configuration
 networks:
-  fit-verse-network:
+  fitverse-network:
     driver: bridge

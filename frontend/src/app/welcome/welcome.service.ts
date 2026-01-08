@@ -11,7 +11,7 @@ export class WelcomeService {
   private http:HttpClient = inject(HttpClient);
 
   public welcome = ():Observable<any> =>{
-    return this.http.get<any>(`${API_CONSTANTS.BASE_URL}/${API_CONSTANTS.ENDPOINTS.MESSAGE}`);
+    return this.http.get<any>(`${API_CONSTANTS.ENDPOINTS.MESSAGE}`);
   }
 
 }

@@ -1,4 +1,5 @@
 services:
+
   mysql:
     env_file:
       - ../../../.env
@@ -21,11 +22,12 @@ services:
     extends:
       file: common-config.yaml
       service: network-configuration
-  fit-verse-backend:
+
+  fitverse-backend:
     env_file:
       - ../../../.env
-    image: "rupesh1997/fit-verse-backend:1.0.1"
-    container_name: fit-verse-backend
+    image: "rupesh1997/fitverse-backend:1.0.1"
+    container_name: fitverse-backend
     depends_on:
       mysql:
         condition: service_healthy
@@ -42,19 +44,22 @@ services:
     extends:
       file: common-config.yaml
       service: network-configuration
-  fit-verse-frontend:
-    image: "rupesh1997/fit-verse-frontend:1.0.0"
-    container_name: fit-verse-frontend
+
+  fitverse-frontend:
+    image: "rupesh1997/fitverse-frontend:1.0.0"
+    container_name: fitverse-frontend
     depends_on:
-      fit-verse-backend:
+      fitverse-backend:
         condition: service_started
     ports:
       - "3000:8080"
     extends:
       file: common-config.yaml
       service: network-configuration
+
 networks:
-  fit-verse-network:
+  fitverse-network:
     driver: bridge
+
 volumes:
   mysql-data:

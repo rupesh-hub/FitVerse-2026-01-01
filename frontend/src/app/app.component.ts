@@ -1,14 +1,12 @@
 import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
-import {WelcomeComponent} from './welcome/welcome.component';
 
 @Component({
   selector: 'fit-verse-root',
-  imports: [RouterOutlet, WelcomeComponent],
+  imports: [RouterOutlet],
   standalone: true,
   template: `
     <router-outlet/>
-    <fit-verse-welcome/>
   `
 })
 export class AppComponent {

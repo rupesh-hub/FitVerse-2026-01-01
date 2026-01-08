@@ -21,7 +21,7 @@ export class WelcomeComponent implements OnInit {
   public ngOnInit(): void {
     this.welcomeService.welcome()
       .subscribe({
-        next: (response: any) => this.message = response.message,
+        next: (response: any) => this.message = response.content,
         error: (err: any) => console.log(err),
         complete: () => console.log(' complete')
       })

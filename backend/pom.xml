@@ -11,9 +11,9 @@
     </parent>
 
     <groupId>com.alfarays</groupId>
-    <artifactId>fit-verse-backend</artifactId>
+    <artifactId>fitverse-backend</artifactId>
     <version>1.0.1</version>
-    <name>fit-verse-backend</name>
+    <name>fitverse-backend</name>
     <description>Fitness tracking application</description>
 
     <properties>
