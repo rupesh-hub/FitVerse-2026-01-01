@@ -389,10 +389,9 @@
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/backend-pipeline.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/backend-pipeline.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kubernetes/backend-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/backend-deployment.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kubernetes/backend-service.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/backend-service.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kubernetes/config-map.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/config-map.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kubernetes/secrets.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/secrets.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kubernetes/database-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/database-deployment.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DEVOPS/DAY-01/backend/src/main/resources/application-dev.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/Main.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/TwoDArray.java" beforeDir="false" />
@@ -616,7 +615,7 @@
       <workItem from="1764850180738" duration="24973000" />
       <workItem from="1767785276434" duration="12014000" />
       <workItem from="1767806151621" duration="882000" />
-      <workItem from="1767843891574" duration="6453000" />
+      <workItem from="1767843891574" duration="6797000" />
     </task>
     <servers />
   </component>

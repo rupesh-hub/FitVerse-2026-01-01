@@ -17,6 +17,20 @@ spec:
         app: fitverse-frontend
 
     spec:
+      initContainers:
+        - name: wait-for-backend
+          image: curlimages/curl:latest
+          command:
+            - sh
+            - -c
+            - |
+              echo "Checking backend health at http://fitverse-backend-service:8181/api/v1.0.0/fit-verse/actuator"
+              until curl -f http://fitverse-backend-service:8181/api/v1.0.0/fit-verse/actuator/health 2>/dev/null; do
+                echo "Backend is unavailable - sleeping"
+                sleep 5
+              done
+              echo "Backend is up - starting frontend"
+
       containers:
         - name: fitverse-frontend
           image: rupesh1997/fit-verse-frontend:1.0.0
@@ -26,7 +40,6 @@ spec:
             requests:
               memory: "512Mi"
               cpu: "200m"
-
             limits:
               memory: "1Gi"
               cpu: "500m"

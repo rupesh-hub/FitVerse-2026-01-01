@@ -9,7 +9,7 @@ spec:
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain # Keeps the PV after the PVC is deleted
+  persistentVolumeReclaimPolicy: Delete
   storageClassName: standard
   hostPath:
     path: /mnt/data/mysql
