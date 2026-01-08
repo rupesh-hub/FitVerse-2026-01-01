@@ -5,7 +5,6 @@ metadata:
   namespace: fitverse
   labels:
     app: fitverse-frontend
-
 spec:
   replicas: 1
   selector:
@@ -15,7 +14,6 @@ spec:
     metadata:
       labels:
         app: fitverse-frontend
-
     spec:
       initContainers:
         - name: wait-for-backend
@@ -30,7 +28,6 @@ spec:
                 sleep 5
               done
               echo "Backend is up - starting frontend"
-
       containers:
         - name: fitverse-frontend
           image: rupesh1997/fitverse-frontend:1.0.0
