@@ -19,7 +19,7 @@ spec:
     spec:
       initContainers:
         - name: wait-for-backend
-          image: curlimages/curl:latest
+          image: rupesh1997/fitverse-frontend:1.0.0
           command:
             - sh
             - -c
