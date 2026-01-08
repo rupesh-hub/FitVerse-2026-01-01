@@ -1,5 +1,4 @@
 services:
-
   mysql:
     env_file:
       - ../../../.env
@@ -14,7 +13,7 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${DATABASE_USERNAME}", "-p${DATABASE_PASSWORD}" ]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${DATABASE_USERNAME}", "-p${DATABASE_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -22,7 +21,6 @@ services:
     extends:
       file: common-config.yaml
       service: network-configuration
-
   fit-verse-backend:
     env_file:
       - ../../../.env
@@ -44,7 +42,6 @@ services:
     extends:
       file: common-config.yaml
       service: network-configuration
-
   fit-verse-frontend:
     image: "rupesh1997/fit-verse-frontend:1.0.0"
     container_name: fit-verse-frontend
@@ -56,10 +53,8 @@ services:
     extends:
       file: common-config.yaml
       service: network-configuration
-
 networks:
   fit-verse-network:
     driver: bridge
-
 volumes:
   mysql-data:

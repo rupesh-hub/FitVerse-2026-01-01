@@ -1,5 +1,4 @@
 services:
-
   fit-verse-backend:
     image: "rupesh1997/fit-verse-backend:1.0.0"
     container_name: fit-verse-backend
@@ -10,7 +9,6 @@ services:
     extends:
       file: common-config.yaml
       service: network-configuration
-
   fit-verse-frontend:
     image: "rupesh1997/fit-verse-frontend:1.0.0"
     container_name: fit-verse-frontend
@@ -22,7 +20,6 @@ services:
     extends:
       file: common-config.yaml
       service: network-configuration
-
 networks:
   fit-verse-network:
     driver: bridge
