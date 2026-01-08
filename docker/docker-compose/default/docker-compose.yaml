@@ -1,6 +1,6 @@
 services:
   fit-verse-backend:
-    image: "rupesh1997/fit-verse-backend:1.0.0"
+    image: "rupesh1997/fit-verse-backend:1.0.1"
     container_name: fit-verse-backend
     ports:
       - "9090:9090"
