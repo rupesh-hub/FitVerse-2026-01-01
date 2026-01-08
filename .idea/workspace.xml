@@ -86,8 +86,6 @@
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/java/com/alfarays/service/ProductService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/resources/application.yml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/resources/data.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/message/MessageResource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/message/MessageResponse.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/.gitattributes" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/deployment/docker/Dockerfile" afterDir="false" />
@@ -391,37 +389,6 @@
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/backend-pipeline.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/backend-pipeline.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/frontend-pipeline.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/frontend-pipeline.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/security/configuration/FitVerseSecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/security/configuration/FitVerseSecurityConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker/backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/docker/backend/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker/docker-compose/default/common-config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose/default/common-config.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker/docker-compose/default/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose/default/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker/docker-compose/docker/common-config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose/docker/common-config.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker/docker-compose/docker/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose/docker/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker/docker-compose/production/common-config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose/production/common-config.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker/docker-compose/production/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose/production/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/nginx.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/auth/authentication/authentication.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/auth/authentication/authentication.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/auth/authentication/authentication.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/auth/authentication/authentication.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/auth/authentication/authentication.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/constants/api.constant.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/constants/api.constant.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/welcome/welcome.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/welcome/welcome.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/welcome/welcome.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/welcome/welcome.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/environments/environment-default.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/environments/environment-default.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/environments/environment-production.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/environments/environment-production.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kubernetes/backend-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/backend-deployment.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kubernetes/backend-service.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/backend-service.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kubernetes/database-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/database-deployment.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kubernetes/frontend-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/frontend-deployment.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kubernetes/persistent-volume-claim.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/persistent-volume-claim.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kubernetes/persistent-volume.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/persistent-volume.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kubernetes/secrets.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/secrets.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DEVOPS/DAY-01/backend/src/main/resources/application-dev.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/Main.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/TwoDArray.java" beforeDir="false" />
@@ -645,7 +612,7 @@
       <workItem from="1764850180738" duration="24973000" />
       <workItem from="1767785276434" duration="12014000" />
       <workItem from="1767806151621" duration="882000" />
-      <workItem from="1767843891574" duration="12401000" />
+      <workItem from="1767843891574" duration="12722000" />
     </task>
     <servers />
   </component>

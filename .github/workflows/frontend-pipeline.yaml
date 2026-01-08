@@ -62,15 +62,14 @@ jobs:
         run: |
           IMAGE_NAME="$USER/fitverse-frontend:$VERSION"
           K8S_PATH="kubernetes/frontend-deployment.yaml"
-          PROD_COMPOSE_PATH="docker/docker-compose/production/docker-compose.yaml"
           
           # 1. Update Docker Compose (Service Specific)
-          yq -i ".services.fitverse-frontend.image = \"$IMAGE_NAME\"" "$PROD_COMPOSE_PATH"
+          yq -i ".services.fitverse-frontend.image = \"$IMAGE_NAME\"" docker/docker-compose/production/docker-compose.yaml
           yq -i ".services.fitverse-frontend.image = \"$IMAGE_NAME\"" docker/docker-compose/default/docker-compose.yaml
           yq -i ".services.fitverse-frontend.image = \"$IMAGE_NAME\"" docker/docker-compose/docker/docker-compose.yaml
           
           # 2. Update Kubernetes (Targeted by container name) - containers:name
-          sed -i "/name: fitverse-frontend/,/image:/ s|image:.*|image: $IMAGE_NAME|" "$K8S_PATH"
+          yq -i '.spec.template.spec.containers[] |= select(.name == "fitverse-frontend").image = "'"$IMAGE_NAME"'"' "$K8S_PATH"
 
       - name: Git Push
         run: |
