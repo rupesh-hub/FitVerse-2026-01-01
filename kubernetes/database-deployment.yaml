@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: fitverse
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "200m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: SPRING_DATASOURCE_PASSWORD
+                  name: fitverse-secrets
+
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  key: DATABASE_NAME
+                  name: fitverse-config
+
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-pv-storage
+              subPath: mysql-data
+      volumes:
+        - name: mysql-pv-storage
+          persistentVolumeClaim:
+            claimName: fitverse-pvc

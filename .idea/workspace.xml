@@ -24,7 +24,6 @@
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/authorization-server-application/pom.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/authorization-server-application/src/main/java/com/alfarays/AuthorizationServerApplication.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/authorization-server-application/src/main/java/com/alfarays/configuration/CorsConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/authorization-server-application/src/main/java/com/alfarays/configuration/OptimizedSecurityConfiguration.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/authorization-server-application/src/main/java/com/alfarays/controller/AuthController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/authorization-server-application/src/main/java/com/alfarays/entity/AppUser.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/authorization-server-application/src/main/java/com/alfarays/entity/OAuthClient.java" afterDir="false" />
@@ -36,15 +35,12 @@
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/authorization-server-application/src/main/java/com/alfarays/service/DatabaseRegisteredClientRepository.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/authorization-server-application/src/main/java/com/alfarays/service/DatabaseUserDetailsService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/authorization-server-application/src/main/java/com/alfarays/util/KeyPairProvider.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/authorization-server-application/src/main/resources/application.yml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/authorization-server-application/src/main/resources/data.sql" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/authorization-server-application/src/test/java/com/alfarays/AuthorizationServerApplicationTests.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/docker/backend/authorization-server/Dockerfile" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/docker/backend/authorization-server/readme.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/docker/backend/resource-server/Dockerfile" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/docker/backend/resource-server/readme.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/docker/docker-compose/common-config.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/docker/docker-compose/docker-compose.yaml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/docker/frontend/Dockerfile" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/.editorconfig" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/.env" afterDir="false" />
@@ -58,9 +54,6 @@
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/package-lock.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/package.json" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/public/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/src/app/app.component.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/src/app/app.component.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/src/app/app.component.spec.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/src/app/app.component.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/src/app/app.config.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/src/app/app.routes.ts" afterDir="false" />
@@ -72,7 +65,6 @@
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/src/app/pages/register/register.component.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/src/app/service/auth.service.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/src/app/service/oauth.service.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/src/app/service/resource.service.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/src/index.html" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/src/main.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/frontend/src/styles.scss" afterDir="false" />
@@ -83,7 +75,6 @@
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/pom.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/java/com/alfarays/ResourceServerApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/java/com/alfarays/configuration/CorsConfiguration.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/java/com/alfarays/configuration/ResourceServerConfig.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/java/com/alfarays/entity/Category.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/java/com/alfarays/entity/Product.java" afterDir="false" />
@@ -91,13 +82,54 @@
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/java/com/alfarays/repository/ProductRepository.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/java/com/alfarays/resource/CategoryResource.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/java/com/alfarays/resource/ProductResource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/java/com/alfarays/resource/WelcomeResource.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/java/com/alfarays/service/CategoryService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/java/com/alfarays/service/ProductService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/resources/application.yml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/resources/data.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/resources/templates/callback.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/test/java/com/alfarays/ResourceServerApplicationTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/events/ConfirmEmailEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/events/ConfirmEmailEventListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/events/ForgotPasswordRequestEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/events/ForgotPasswordRequestEventListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/exceptions/FitVerseException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/exceptions/GlobalExceptionHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/mail/configuration/FitVerseMailConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/mail/model/FitVerseMailRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/mail/service/FitVerseMailService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/mail/service/IMailService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/security/jwt/TokenService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/security/service/CustomUserDetailsService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/shared/AbstractEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/shared/AudiAware.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/shared/GlobalResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/authentication/resource/AuthenticationResource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/authentication/service/AuthenticationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/authentication/service/IAuthenticationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/entity/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/mapper/UserMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/model/ChangePasswordRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/model/FilterUserRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/model/UserResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/repository/UserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/resource/UserResource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/service/IUserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/service/UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/db/migration/V2__init_schema.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/forgot-password.ftl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gitops/Jenkinsfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kubernetes/backend-deployment.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kubernetes/backend-service.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kubernetes/config-map.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kubernetes/database-deployment.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kubernetes/database-service.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kubernetes/frontend-deployment.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kubernetes/frontend-service.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kubernetes/hpa.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kubernetes/ingress.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kubernetes/namespace.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kubernetes/persistent-volume-claim.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kubernetes/persistent-volume.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kubernetes/secrets.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/.gitattributes" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/deployment/docker/Dockerfile" afterDir="false" />
@@ -107,21 +139,178 @@
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/src/main/java/com/alfarays/JenkinsDemoProject01Application.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/src/main/resources/application.yaml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/src/test/java/com/alfarays/JenkinsDemoProject01ApplicationTests.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../PURELY-GOODS/config-server/src/main/resources/config/cart-service-prod.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../PURELY-GOODS/config-server/src/main/resources/config/cart-service-staging.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../PURELY-GOODS/config-server/src/main/resources/config/order-service-prod.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../PURELY-GOODS/config-server/src/main/resources/config/order-service-staging.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../PURELY-GOODS/config-server/src/main/resources/config/order-service.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../PURELY-GOODS/config-server/src/main/resources/config/payment-service-prod.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../PURELY-GOODS/config-server/src/main/resources/config/payment-service-staging.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../PURELY-GOODS/docker/backend/cart-service/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../PURELY-GOODS/docker/backend/cart-service/readme.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../PURELY-GOODS/docker/backend/order-service/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../PURELY-GOODS/docker/backend/order-service/readme.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../PURELY-GOODS/docker/backend/payment-service/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../PURELY-GOODS/docker/backend/payment-service/readme.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../PURELY-GOODS/docker/backend/product-service/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../PURELY-GOODS/docker/backend/product-service/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/.github/workflows/backend-pipeline.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/.github/workflows/frontend-pipeline.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/backend/src/main/java/com/alfarays/configuration/ApplicationConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/backend/src/main/resources/application-docker.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/backend/src/main/resources/application-production.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/docker/backend/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/docker/backend/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/docker/docker-compose/default/common-config.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/docker/docker-compose/default/docker-compose.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/docker/docker-compose/production/common-config.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/docker/docker-compose/production/docker-compose.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/docker/docker-compose/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/docker/frontend/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/docker/frontend/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/frontend/nginx.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/frontend/postcss.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/frontend/src/app/constants/api.constants.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/frontend/src/app/constants/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/frontend/src/environments/environment-default.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/frontend/src/environments/environment-docker.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/frontend/src/environments/environment-production.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/kubernetes/namespace.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/kubernetes/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/terraform/compute.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/terraform/outputs.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/terraform/provider.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/terraform/security-group.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/terraform/terraform.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/terraform/varibales.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../KUBERNETES-HANDSON/CHAT-APPLICATION/terraform/vpc.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../TERRAFORM-PRACTICE/TERRAFORM-DAY-01/terraform.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../TERRAFORM/TERRAFORM-IN-ONE-SHOT/main.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../TERRAFORM/TERRAFORM-IN-ONE-SHOT/provider.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../TERRAFORM/TERRAFORM-IN-ONE-SHOT/s3.tf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/.github/workflows/backend-pipeline.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/.github/workflows/frontend-pipeline.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/backend/src/main/resources/application-docker.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/backend/src/main/resources/application-production.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/deployment/backend/Jenkinsfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/deployment/frontend/Jenkinsfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/deployment/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/docker/backend/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/docker/backend/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/docker/docker-compose/default/common-config.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/docker/docker-compose/default/docker-compose.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/docker/docker-compose/production/common-config.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/docker/docker-compose/production/docker-compose.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/docker/docker-compose/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/docker/frontend/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/docker/frontend/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/frontend/nginx.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/frontend/src/environments/environment-docker.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/frontend/src/environments/environment-production.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/frontend/src/environments/environment.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/kubernetes/backend.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/kubernetes/config-map.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/kubernetes/frontend.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/kubernetes/mysql.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/kubernetes/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../USER-MANAGEMENT-SYSTEM/kubernetes/secrets.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/docker/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/docker/docker-compose/common-config.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/docker/docker-compose/docker-compose.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/controller/HomeController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/security/configuration/TmsSecurityConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/task/controller/CategoryAPIController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/task/controller/CategoryWebController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/task/controller/TaskAPIController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/task/controller/TaskWebController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/task/dto/CategoryDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/task/dto/TaskDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/task/entity/Category.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/task/entity/Task.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/task/mapper/TaskMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/task/repository/CategoryRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/task/repository/TaskRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/task/service/CategoryService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/task/service/TaskService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/task/service/impl/CategoryServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/java/com/alfarays/task/service/impl/TaskServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/resources/data.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/resources/templates/category-list.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/resources/templates/create-task.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/resources/templates/dashboard.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/resources/templates/edit-task.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/resources/templates/footer.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/resources/templates/header.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/resources/templates/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/resources/templates/layout.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/resources/templates/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/resources/templates/register.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../task-management-system/src/main/resources/templates/task-list.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/authorization-server/src/main/java/com/alfarays/configurations/ApplicationConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/authorization-server/src/main/java/com/alfarays/configurations/CustomSecurityConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/authorization-server/src/main/java/com/alfarays/controller/HomeController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/authorization-server/src/main/java/com/alfarays/entity/AppUser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/authorization-server/src/main/java/com/alfarays/entity/OAuthClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/authorization-server/src/main/java/com/alfarays/model/RegistrationRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/authorization-server/src/main/java/com/alfarays/model/RegistrationResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/authorization-server/src/main/java/com/alfarays/repository/AppUserRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/authorization-server/src/main/java/com/alfarays/repository/OAuthClientRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/authorization-server/src/main/java/com/alfarays/resource/AuthenticationResource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/authorization-server/src/main/java/com/alfarays/service/AuthenticationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/authorization-server/src/main/java/com/alfarays/service/DatabaseRegisteredClientRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/authorization-server/src/main/java/com/alfarays/service/DatabaseUserDetailsService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/authorization-server/src/main/resources/data.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/authorization-server/src/main/resources/templates/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/config-server/src/main/resources/configurations/authorization-server-docker.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/config-server/src/main/resources/configurations/authorization-server-production.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/config-server/src/main/resources/configurations/authorization-server.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/backend/product-service/src/main/resources/data.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/deployment/backend/authorization-server/Jenkinsfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/deployment/backend/cart-service/Jenkinsfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/deployment/backend/config-server/Jenkinsfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/deployment/backend/discovery-server/Jenkinsfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/deployment/backend/gateway-server/Jenkinsfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/deployment/backend/order-service/Jenkinsfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/deployment/backend/payment-service/Jenkinsfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/deployment/backend/product-service/Jenkinsfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/deployment/frontend/Jenkinsfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/authorization-server/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/authorization-server/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/cart-service/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/cart-service/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/config-server/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/config-server/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/discovery-server/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/discovery-server/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/gateway-server/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/gateway-server/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/order-service/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/order-service/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/payment-service/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/payment-service/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/product-service/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/backend/product-service/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/frontend/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/docker/frontend/readme.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/postcss.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/src/app/constants/api-constants.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/src/app/constants/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/src/app/core/auth.routes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/src/app/features/admin/admin.routes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/src/app/features/distributor/dashboard/dashboard.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/src/app/features/distributor/distributor.routes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/src/app/features/distributor/distributor.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/src/app/features/users/users.routes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/src/app/features/users/users.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/src/app/shared/validators/custom.validator.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/src/app/shared/validators/password-match.validator.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/src/app/shared/validators/password.validator.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/src/environments/environment-default.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/src/environments/environment-docker.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/frontend/src/environments/environment-production.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/authorization-server-database.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/authorization-server.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/cart-service-database.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/cart-service.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/config-map.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/config-server.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/discovery-server.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/frontend.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/gateway-server.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/ingress.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/namespace.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/order-service-database.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/order-service.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/payment-service-database.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/payment-service.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/product-service-database.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/product-service.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../SHOPPING HUB/kubernetes/secrets.yaml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../../microservices-3.4.1/section8/configserver/src/main/resources/config/eurekaserver.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/AUANTUM-CART/.github/workflows/product-service-pipeline.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/AUANTUM-CART/AUTHORIZATION-SERVICE/.gitattributes" beforeDir="false" />
@@ -244,8 +433,33 @@
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployment/backend/Jenkinsfile" beforeDir="false" afterPath="$PROJECT_DIR$/deployment/backend/Jenkinsfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployment/frontend/Jenkinsfile" beforeDir="false" afterPath="$PROJECT_DIR$/deployment/frontend/Jenkinsfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/backend-pipeline.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/backend-pipeline.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/frontend-pipeline.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/frontend-pipeline.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/BackendApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/BackendApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/security/configuration/FitVerseSecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/security/configuration/FitVerseSecurityConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/welcome/WelcomeResource.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application-docker.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application-docker.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application-prod.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application-production.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deployment/backend/Jenkins-setup.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deployment/backend/backend-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deployment/backend/mysql-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/db/migration/V1__init_schema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deployment/frontend/frontend-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/email-confirmation.ftl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/docker/backend/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/docker-compose/default/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose/default/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/docker-compose/docker/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose/docker/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/docker-compose/production/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose/production/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/docker-compose/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/constants/api.constant.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/constants/api.constant.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/environments/environments.docker.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/environments/environment-docker.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/environments/environments.production.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/environments/environment-production.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/environments/environments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/environments/environment-default.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.spec.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.spec.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DEVOPS/DAY-01/backend/src/main/resources/application-dev.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/Main.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/TwoDArray.java" beforeDir="false" />
@@ -371,6 +585,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -378,12 +593,23 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="KubernetesApiProvider">{
+  &quot;contexts&quot;: [
+    {
+      &quot;name&quot;: &quot;iam-root-account@demo-cluster.us-east-1.eksctl.io&quot;
+    }
+  ],
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="KubernetesSettings">
+    <option name="contextName" value="iam-root-account@demo-cluster.us-east-1.eksctl.io" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="36NbrjazjTcbQzPmtPoLgOUyFQV" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -396,33 +622,39 @@
     <option name="showLibraryContents" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "Spring Boot.BackendApplication.executor": "Run",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/rupeshdulal/Desktop/DEVOPS-FULL-COURSE/FitVerse/docker/docker-compose/production",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "reference.settings.ide.settings.new.ui",
-    "ts.external.directory.path": "/Users/rupeshdulal/Desktop/DEVOPS-FULL-COURSE/FitVerse/frontend/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;Spring Boot.BackendApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/rupeshdulal/Desktop/DEVOPS-FULL-COURSE/FitVerse/kubernetes&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Jenkins Linter&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/rupeshdulal/Desktop/DEVOPS-FULL-COURSE/FitVerse/frontend/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/kubernetes" />
       <recent name="$PROJECT_DIR$/docker/docker-compose/production" />
       <recent name="$PROJECT_DIR$/docker/docker-compose/docker" />
     </key>
@@ -448,7 +680,10 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1764850177322</updated>
-      <workItem from="1764850180738" duration="24153000" />
+      <workItem from="1764850180738" duration="24973000" />
+      <workItem from="1767785276434" duration="12014000" />
+      <workItem from="1767806151621" duration="882000" />
+      <workItem from="1767843891574" duration="4391000" />
     </task>
     <servers />
   </component>

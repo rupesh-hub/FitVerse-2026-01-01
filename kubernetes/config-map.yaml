@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fitverse-config
+data:
+  SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/fitverse?createDatabaseIfNotExist=true"
+  SPRING_PROFILES_ACTIVE: "production"
+  DATABASE_NAME: "fitverse"

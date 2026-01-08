@@ -1,25 +1,36 @@
 spring:
   application:
     name: fit-verse-backend
+
   profiles:
-    active: default
+    active: ${SPRING_PROFILES_ACTIVE:docker}
+
   config:
     import:
-      - "application-prod.yaml"
-      - "application-docker.yaml"
+      - "optional:application-production.yaml"
+      - "optional:application-docker.yaml"
+
+  flyway:
+    enabled: false  # Disabled for local H2 development
 
   datasource:
-    url: jdbc:mysql://localhost:3306/fitverse
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:devops
+    driverClassName: org.h2.Driver
+    username: sh
+    password:
+
   jpa:
     hibernate:
-      ddl-auto: update   # create | update | validate | none
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 
 management:
   endpoints:
@@ -49,19 +60,41 @@ server:
 
 application:
   cors:
-    origins: http://localhost:4200,http://localhost:8080,http://192.168.1.70:3000,http://fit-verse-frontend:8080
+    origins: ${APPLICATION_CORS_ORIGINS:http://localhost:4200,http://localhost:8080}
 
 info:
   app:
-    name: Fit Verse Default
-    description: Fitness Tracking System.
-    version: 1.0.0
-    profile: default
-    owner: Rupesh Dulal
-    website: https://www.alfarays.tech
+    name: "FitVerse API"
+    description: "Enterprise-grade backend for FitVerse Fitness Ecosystem"
+    version: "@project.version@" # Automatically pulled from pom.xml
+    environment: "Production"
+    profile: ${spring.profiles.active}
+
+  # Technical details for DevOps/SRE teams
+  system:
+    java-version: "${java.version}"
+    spring-boot-version: "@project.parent.version@"
+    encoding: "UTF-8"
+
+  # Build Metadata (Requires 'git-commit-id-plugin' in pom.xml)
   build:
+    artifact: "@project.artifactId@"
     timestamp: "@timestamp@"
+    group: "@project.groupId@"
+    git:
+      branch: "@git.branch@"
+      commit-id: "@git.commit.id.abbrev@"
+      commit-time: "@git.commit.time@"
+
+  # Business & Support Context
+  organization:
+    name: "AlfaRays Tech"
+    website: "https://www.alfarays.tech"
+    support-email: "support@alfarays.tech" # Professional support alias
+
   developer:
-    name: "Rupesh Dulal"
-    email: "rupeshdulal672@gmail.com"
-    github: "https://github.com/rupesh-hub"
+    lead: "Rupesh Dulal"
+    contact: "rupeshdulal672@gmail.com"
+    github-profile: "https://github.com/rupesh-hub"
+    repository: "https://github.com/rupesh-hub/fit-verse-backend"
+

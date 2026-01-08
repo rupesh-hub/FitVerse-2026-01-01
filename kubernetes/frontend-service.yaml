@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fitverse-frontend-service
+  namespace: fitverse
+  labels:
+    app: fitverse-frontend
+spec:
+  type: LoadBalancer # LoadBalancer for an external IP, otherwise ClusterIP is the default
+  selector:
+    app: fitverse-frontend
+  ports:
+    - protocol: TCP
+      port: 4200      # Port exposed by the SERVICE
+      targetPort: 8080 # Port the CONTAINER is listening on

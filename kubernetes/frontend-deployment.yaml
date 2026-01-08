@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fitverse-frontend-deployment
+  namespace: fitverse
+  labels:
+    app: fitverse-frontend
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fitverse-frontend
+  template:
+    metadata:
+      labels:
+        app: fitverse-frontend
+
+    spec:
+      containers:
+        - name: fitverse-frontend
+          image: rupesh1997/fit-verse-frontend:1.0.0
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "200m"
+
+            limits:
+              memory: "1Gi"
+              cpu: "500m"

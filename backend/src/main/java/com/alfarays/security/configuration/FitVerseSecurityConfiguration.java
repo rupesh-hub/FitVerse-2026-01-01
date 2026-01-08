@@ -21,7 +21,7 @@ public class FitVerseSecurityConfiguration {
     @Value("${application.cors.origins}")
     private List<String> allowedOrigins;
 
-    private String[] publicUris = {"/message", "/messages/**"};
+    private final String[] publicUris = {"/message", "/messages/**", "/actuator", "/actuator/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

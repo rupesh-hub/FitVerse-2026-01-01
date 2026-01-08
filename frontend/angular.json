@@ -7,7 +7,31 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "skipTests": true,
+          "inlineStyle": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true,
+          "flat": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:guard": {
+          "skipTests": true
+        },
+        "@schematics/angular:interceptor": {
+          "skipTests": true
+        },
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:resolver": {
+          "skipTests": true
         }
       },
       "root": "",
@@ -54,8 +78,8 @@
               "outputHashing": "all",
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environments.ts",
-                  "with": "src/environments/environments.production.ts"
+                  "replace": "src/environments/environment-default.ts",
+                  "with": "src/environments/environment-production.ts"
                 }
               ]
             },
@@ -67,8 +91,8 @@
             "docker": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environments.ts",
-                  "with": "src/environments/environments.docker.ts"
+                  "replace": "src/environments/environment-default.ts",
+                  "with": "src/environments/environment-docker.ts"
                 }
               ],
               "optimization": true,

@@ -1,5 +1,9 @@
 #Build stage
 FROM maven:3.8.7-openjdk-18 AS build
+
+MAINTAINER Rupesh Dulal<dulalrupesh77@gmail.com>
+LABEL app=FitVerseBackend
+
 WORKDIR /build
 COPY pom.xml .
 RUN mvn dependency:go-offline
@@ -11,13 +15,13 @@ FROM amazoncorretto:17
 WORKDIR /app
 COPY --from=build /build/target/fit-verse-backend-*.jar /app/
 
-ARG JAR_VERSION=1.0.0
-ARG PROFILE=default
+ARG PROJECT_VERSION=1.0.0
+ARG ACTIVE_PROFILE=default
 
 EXPOSE 9090
 
-ENV APP_VERSION=${JAR_VERSION}
-ENV ACTIVE_PROFILE=${PROFILE}
+ENV VERSION=${PROJECT_VERSION}
+ENV PROFILE=${ACTIVE_PROFILE}
 ENV DATABASE_URL=jdbc:mysql://mysql:3306/fitverse
 
-CMD java -jar -Dspring.profiles.active=${ACTIVE_PROFILE} -Dspring.datasource.url=${DATABASE_URL} fit-verse-backend-${APP_VERSION}.jar
+CMD java -jar -Dspring.profiles.active=${PROFILE} -Dspring.datasource.url=${DATABASE_URL} fit-verse-backend-${VERSION}.jar

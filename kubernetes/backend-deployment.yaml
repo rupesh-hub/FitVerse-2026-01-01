@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fitverse-backend-deployment
+  namespace: fitverse
+  labels:
+    app: fitverse-backend
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fitverse-backend
+  template:
+    metadata:
+      labels:
+        app: fitverse-backend
+
+    spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox:1.28
+          command: [ 'sh', '-c', "until nc -zv mysql 3306; do echo waiting for mysql; sleep 2; done" ]
+
+      containers:
+        - name: fitverse-backend
+          image: rupesh1997/fit-verse-backend:1.0.0
+          ports:
+            - containerPort: 8181
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_PROFILES_ACTIVE
+                  name: fitverse-config
+
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_DATASOURCE_URL
+                  name: fitverse-config
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: SPRING_DATASOURCE_PASSWORD
+                  name: fitverse-secrets
+
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "200m"
+
+            limits:
+              memory: "1Gi"
+              cpu: "500m"

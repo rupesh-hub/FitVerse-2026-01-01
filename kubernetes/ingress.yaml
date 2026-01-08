@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fitverse-ingress
+  namespace: fitverse
+  annotations:
+    # This tells the NGINX Controller how to handle the traffic
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: fitverse.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fitverse-frontend-service
+                port:
+                  number: 4200
