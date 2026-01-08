@@ -54,7 +54,7 @@ management:
       enabled: true
 
 server:
-  port: 9090
+  port: 8181
   servlet:
     context-path: /api/v1.0.0/fit-verse
 

@@ -86,50 +86,6 @@
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/java/com/alfarays/service/ProductService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/resources/application.yml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/resources/data.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/events/ConfirmEmailEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/events/ConfirmEmailEventListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/events/ForgotPasswordRequestEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/events/ForgotPasswordRequestEventListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/exceptions/FitVerseException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/exceptions/GlobalExceptionHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/mail/configuration/FitVerseMailConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/mail/model/FitVerseMailRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/mail/service/FitVerseMailService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/mail/service/IMailService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/security/jwt/TokenService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/security/service/CustomUserDetailsService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/shared/AbstractEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/shared/AudiAware.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/shared/GlobalResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/authentication/resource/AuthenticationResource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/authentication/service/AuthenticationService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/authentication/service/IAuthenticationService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/entity/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/mapper/UserMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/model/ChangePasswordRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/model/FilterUserRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/model/UserResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/repository/UserRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/resource/UserResource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/service/IUserService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/user/service/UserService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/db/migration/V2__init_schema.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/forgot-password.ftl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gitops/Jenkinsfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kubernetes/backend-deployment.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kubernetes/backend-service.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kubernetes/config-map.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kubernetes/database-deployment.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kubernetes/database-service.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kubernetes/frontend-deployment.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kubernetes/frontend-service.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kubernetes/hpa.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kubernetes/ingress.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kubernetes/namespace.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kubernetes/persistent-volume-claim.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kubernetes/persistent-volume.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kubernetes/secrets.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/.gitattributes" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/deployment/docker/Dockerfile" afterDir="false" />
@@ -434,32 +390,9 @@
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.github/workflows/backend-pipeline.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/backend-pipeline.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/frontend-pipeline.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/frontend-pipeline.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/BackendApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/BackendApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/security/configuration/FitVerseSecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/security/configuration/FitVerseSecurityConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/alfarays/welcome/WelcomeResource.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application-docker.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application-docker.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application-prod.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application-production.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployment/backend/Jenkins-setup.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployment/backend/backend-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployment/backend/mysql-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/db/migration/V1__init_schema.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployment/frontend/frontend-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/email-confirmation.ftl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker/backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/docker/backend/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker/docker-compose/default/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose/default/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker/docker-compose/docker/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose/docker/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker/docker-compose/production/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose/production/docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker/docker-compose/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/docker/docker-compose/readme.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/angular.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/constants/api.constant.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/constants/api.constant.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/environments/environments.docker.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/environments/environment-docker.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/environments/environments.production.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/environments/environment-production.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/environments/environments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/environments/environment-default.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.app.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.spec.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.spec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kubernetes/backend-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/backend-deployment.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kubernetes/config-map.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/config-map.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kubernetes/secrets.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/secrets.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DEVOPS/DAY-01/backend/src/main/resources/application-dev.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/Main.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/TwoDArray.java" beforeDir="false" />
@@ -683,7 +616,7 @@
       <workItem from="1764850180738" duration="24973000" />
       <workItem from="1767785276434" duration="12014000" />
       <workItem from="1767806151621" duration="882000" />
-      <workItem from="1767843891574" duration="4391000" />
+      <workItem from="1767843891574" duration="6453000" />
     </task>
     <servers />
   </component>

@@ -105,7 +105,7 @@ jobs:
           yq -i ".services.fit-verse-backend.image = \"$IMAGE_NAME\"" "$DEFAULT_COMPOSE_PATH"
 
           # 2. Update Kubernetes (Targeting the backend container name)
-          sed -i "/name: fitverse-backend/,/image:/ s|image:.*|image: $IMAGE_NAME|" "$K8S_PATH"
+          yq -i "(.spec.template.spec.containers[] | select(.name == \"fitverse-backend\") | .image) = \"$IMAGE_NAME\"" "$K8S_PATH"
 
           # Store variables for the next step 
           echo "VERSION=$VERSION" >> $GITHUB_ENV

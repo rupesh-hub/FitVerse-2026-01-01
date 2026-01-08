@@ -18,7 +18,7 @@ COPY --from=build /build/target/fit-verse-backend-*.jar /app/
 ARG PROJECT_VERSION=1.0.0
 ARG ACTIVE_PROFILE=default
 
-EXPOSE 9090
+EXPOSE 8181
 
 ENV VERSION=${PROJECT_VERSION}
 ENV PROFILE=${ACTIVE_PROFILE}

@@ -19,7 +19,7 @@ spec:
     spec:
       initContainers:
         - name: wait-for-mysql
-          image: rupesh1997/fit-verse-backend:1.0.1
+          image: busybox:1.28
           command: [ 'sh', '-c', "until nc -zv mysql 3306; do echo waiting for mysql; sleep 2; done" ]
 
       containers:
