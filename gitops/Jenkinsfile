@@ -46,19 +46,18 @@ pipeline {
                     script {
                         echo "Deploying ${params.SERVICE_NAME}:${params.DOCKER_TAG} to Namespace: ${env.TARGET_NS}..."
 
-                        // double quotes (""") to allow ${params.VAR} interpolation
-                        sh """
-                            # 1. Clean up unmanaged namespace if it exists without Helm labels
+                        sh """#!/bin/bash
+                            # 1. Clean up unmanaged namespace if it exists (using POSIX [ or /bin/bash)
                             if kubectl --kubeconfig $KUBECONFIG_FILE get namespace ${env.TARGET_NS} >/dev/null 2>&1; then
                                 MANAGED_BY=\$(kubectl --kubeconfig $KUBECONFIG_FILE get namespace ${env.TARGET_NS} -o jsonpath='{.metadata.labels.app\\.kubernetes\\.io/managed-by}' || echo "none")
-                                if [[ "\$MANAGED_BY" != "Helm" ]]; then
+                                if [ "\$MANAGED_BY" != "Helm" ]; then
                                     echo "Found unmanaged namespace. Deleting for clean Helm install..."
                                     kubectl --kubeconfig $KUBECONFIG_FILE delete namespace ${env.TARGET_NS} --wait=true
                                 fi
                             fi
 
                             # 2. Helm Deployment
-                            # Ensure the path ./helm contains your Chart.yaml
+                            # Ensure namespace.yaml is NOT in your ./helm/templates folder
                             helm upgrade --install fitverse-${params.SERVICE_NAME} ./helm \
                                 --namespace ${env.TARGET_NS} \
                                 --create-namespace \
