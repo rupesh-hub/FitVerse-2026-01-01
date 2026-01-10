@@ -389,20 +389,6 @@
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vars/checkoutRepository.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vars/dependencyCheckScan.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vars/dockerBuild.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vars/dockerPush.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vars/getVersion.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vars/helmDeploy.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vars/mavenExecute.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vars/notify.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vars/npmExecute.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vars/pushImages.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vars/sonarScan.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vars/trivyFsScan.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vars/trivyImageSacn.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vars/updateManifests.groovy" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DEVOPS/DAY-01/backend/src/main/resources/application-dev.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/Main.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/TwoDArray.java" beforeDir="false" />
@@ -632,7 +618,7 @@
       <workItem from="1767806151621" duration="882000" />
       <workItem from="1767843891574" duration="26333000" />
       <workItem from="1767941594597" duration="15361000" />
-      <workItem from="1768025416846" duration="14975000" />
+      <workItem from="1768025416846" duration="15831000" />
     </task>
     <servers />
   </component>
