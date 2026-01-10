@@ -81,6 +81,11 @@ spec:
                 configMapKeyRef:
                   key: SPRING_DATASOURCE_URL
                   name: {{ .Chart.Name }}-config
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_DATASOURCE_URL
+                  name: {{ .Chart.Name }}-config
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 configMapKeyRef:

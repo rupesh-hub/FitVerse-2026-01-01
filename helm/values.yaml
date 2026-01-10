@@ -14,7 +14,7 @@ namespace:
 mysql:
   replicas: 1
   environment:
-    MYSQL_ROOT_PASSWORD: "changeme123!"  # CRITICAL: Override via external secrets
+    MYSQL_ROOT_PASSWORD: "root"  # CRITICAL: Override via external secrets
     MYSQL_DATABASE: "fitverse"
   image:
     repository: mysql
@@ -40,13 +40,12 @@ mysql:
 
 # Backend (Spring Boot API) Configuration
 backend:
-  replicas: 2
+  replicas: 1
   environment:
     SPRING_DATASOURCE_URL: "jdbc:mysql://fitverse-mysql:3306/fitverse?createDatabaseIfNotExist=true&useSSL=true"
     SPRING_DATASOURCE_USERNAME: "root"
-    SPRING_DATASOURCE_PASSWORD: "changeme123!"  # CRITICAL: Use external secrets
     SPRING_PROFILES_ACTIVE: "production"
-    APPLICATION_CORS_ORIGINS: "http://192.168.1.70"  # Configure for your domain
+    APPLICATION_CORS_ORIGINS: "http://192.168.1.70:4200"
   image:
     repository: rupesh1997/fitverse-backend
     pullPolicy: IfNotPresent
@@ -72,7 +71,7 @@ backend:
 
 # Frontend (Angular) Configuration
 frontend:
-  replicas: 2
+  replicas: 1
   image:
     repository: rupesh1997/fitverse-frontend
     pullPolicy: IfNotPresent
