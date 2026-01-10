@@ -9,22 +9,13 @@ pipeline {
     }
 
     environment {
-        // Source code
         GIT_URL          = "https://github.com/rupesh-hub/FitVerse-2026-01-01.git"
         GIT_BRANCH       = "main"
-
-        // Logical Paths
         PROJECT_PATH     = "backend"
-
-        // Relative to PROJECT_PATH, the Dockerfile is one level up then in docker/
         DOCKERFILE_PATH  = "../docker/backend/Dockerfile"
-
-        // Registry & Tools
         DOCKERHUB_REPO   = "rupesh1997/fitverse-backend"
         SONAR_API_ENV    = "SonarQube"
-
-        // Other environment variables
-        ACTIVE_PROFILE = "production"
+        ACTIVE_PROFILE   = "production"
     }
 
     stages {
@@ -37,10 +28,7 @@ pipeline {
         stage('Checkout & Version Extraction') {
             steps {
                 script {
-                    // 1. Robust Checkout of the full repository
                     checkoutRepository(env.GIT_URL, env.GIT_BRANCH)
-
-                    // 2. Extract version from backend/pom.xml
                     env.APP_VERSION = getVersion(env.PROJECT_PATH)
                     echo "Extracted Version: ${env.APP_VERSION}"
                 }
@@ -50,40 +38,19 @@ pipeline {
         stage('Java: Build & Package') {
             steps {
                 script {
-                    // Professional practice: 'package' includes compilation and JAR creation
                     mavenExecute('clean package', env.PROJECT_PATH)
                 }
             }
         }
 
-        stage('Security & Quality Gates') {
-            // Running these in parallel makes the pipeline significantly faster
-            /* parallel {
-                 stage('SAST & SCA') {
-                    steps {
-                        dir("${env.PROJECT_PATH}") {
-                            script {
-                                // SonarQube for Code Quality
-                                sonarScan(
-                                    projectName: "fitverse-backend",
-                                    projectKey:  "fitverse-backend-key",
-                                    apiEnv: env.SONAR_API_ENV
-                                )
-                                // OWASP for Dependency Vulnerabilities
-                                dependencyCheckScan(scanPath: '.', failThreshold: '7.0')
-                            }
-                        }
-                    }
-                } */
-                stage('Trivy: Filesystem') {
-                    steps {
-                        script {
-                            // Scans the source code directory for hardcoded secrets/vulns
-                            trivyFsScan(env.PROJECT_PATH)
-                        }
-                    }
+        stage('Security Scanning') {
+            steps {
+                script {
+                    // Since you only have one scan now, no need for 'parallel'
+                    // This prevents syntax errors and potential hanging
+                    trivyFsScan(env.PROJECT_PATH)
                 }
-             /* } */
+            }
         }
 
         stage("Docker: Build Image") {
@@ -95,8 +62,6 @@ pipeline {
                             'PROJECT_VERSION': env.APP_VERSION,
                             'ACTIVE_PROFILE' : env.ACTIVE_PROFILE
                         ]
-
-                        // Points to the Dockerfile in ../docker/backend/Dockerfile
                         dockerBuild(env.DOCKERHUB_REPO, tags, buildParams, env.DOCKERFILE_PATH)
                     }
                 }
@@ -106,8 +71,7 @@ pipeline {
         stage('Trivy: Image Scan') {
             steps {
                 script {
-                    // Final Gate: Scan the built image before it reaches the registry
-                    trivyScan(["${env.DOCKERHUB_REPO}:${env.APP_VERSION}"])
+                    trivyImageScan(["${env.DOCKERHUB_REPO}:${env.APP_VERSION}"])
                 }
             }
         }
@@ -116,7 +80,6 @@ pipeline {
             steps {
                script {
                   def pushList = ["${env.DOCKERHUB_REPO}:latest", "${env.DOCKERHUB_REPO}:${env.APP_VERSION}"]
-                  // Secure push using credentials handled in library
                   pushImages(pushList, "dockerhub")
                }
             }
@@ -126,18 +89,19 @@ pipeline {
     post {
          success {
             script {
-                // Artifact Management
                 archiveArtifacts artifacts: "${env.PROJECT_PATH}/target/*.jar", allowEmptyArchive: true
+                // Note: dependency-check-report will only exist if you run that scan
                 archiveArtifacts artifacts: '**/dependency-check-report.xml', allowEmptyArchive: true
 
-                // Call library notification
                 notify('SUCCESS', 'dulalrupesh77@gmail.com')
 
-                // Trigger Downstream CD Job
-                build job: "FitVerse-CD", parameters: [
-                    string(name: 'DOCKER_TAG', value: env.APP_VERSION),
-                    string(name: 'SERVICE_NAME', value: 'backend')
-                ]
+                // Downstream CD Job (Ensure this job name exists in Jenkins)
+                catchError(buildStepFailure: 'FAILURE', stageResult: 'FAILURE') {
+                    build job: "FitVerse-CD", parameters: [
+                        string(name: 'DOCKER_TAG', value: env.APP_VERSION),
+                        string(name: 'SERVICE_NAME', value: 'backend')
+                    ]
+                }
             }
          }
          failure {

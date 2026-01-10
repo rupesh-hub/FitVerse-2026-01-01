@@ -13,69 +13,75 @@ pipeline {
         GIT_BRANCH       = "main"
         DOCKERHUB_USER   = "rupesh1997"
         GIT_CRED_ID      = "git-ssh-cred"
+        TARGET_NS        = "fitverse"
     }
 
     stages {
         stage('Checkout Manifests') {
             steps {
-                // Checkout the root directory (FitVerse)
-                checkoutRepo(env.GIT_URL, env.GIT_BRANCH, env.GIT_CRED_ID)
+                checkoutRepository(env.GIT_URL, env.GIT_BRANCH, env.GIT_CRED_ID)
             }
         }
 
         stage('Update Manifests') {
             steps {
                 script {
-                    if (!params.DOCKER_TAG) {
-                        error "DOCKER_TAG is required. CD aborted."
-                    }
-
-                    // Updates Compose, K8s yaml, and helm/values.yaml in Git
+                    if (!params.DOCKER_TAG) { error "DOCKER_TAG is missing!" }
                     updateManifests(
                         serviceName: params.SERVICE_NAME,
                         version: params.DOCKER_TAG,
-                        dockerUser: env.DOCKERHUB_USER
+                        dockerUser: env.DOCKERHUB_USER,
+                        gitCredentialsId: env.GIT_CRED_ID
                     )
-                }
-            }
-        }
-
-        stage('Deploy: Docker Compose') {
-            steps {
-                script {
-                    echo "Deploying via Docker Compose..."
-                    dir("docker/docker-compose/production") {
-                        sh "docker compose pull"
-                        sh "docker compose up -d"
-                    }
                 }
             }
         }
 
         stage('Deploy: Helm (Kubernetes)') {
             steps {
-                script {
-                    // Uses the Helm folder in the root directory
-                    helmDeploy(
-                        releaseName: 'fitverse-backend',
-                        chartPath:   './helm',
-                        version:     params.DOCKER_TAG,
-                        namespace:   'production'
-                    )
+                withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG_FILE')]) {
+                    script {
+                        echo "Deploying ${params.SERVICE_NAME} to Namespace: ${env.TARGET_NS}..."
+
+                        withEnv(["HTTP_PROXY=", "http_proxy=", "HTTPS_PROXY=", "https_proxy=", "NO_PROXY=", "no_proxy="]) {
+                            sh '''
+                                # 1. Clean up unmanaged namespace to avoid ownership errors
+                                if kubectl --kubeconfig $KUBECONFIG_FILE get namespace $TARGET_NS >/dev/null 2>&1; then
+                                    if ! kubectl --kubeconfig $KUBECONFIG_FILE get namespace $TARGET_NS -o jsonpath='{.metadata.labels.app\\.kubernetes\\.io/managed-by}' | grep -q "Helm"; then
+                                        echo "Found unmanaged namespace. Deleting for clean Helm install..."
+                                        kubectl --kubeconfig $KUBECONFIG_FILE delete namespace $TARGET_NS --wait=true
+                                    fi
+                                fi
+
+                                # 2. Helm Deployment
+                                helm upgrade --install fitverse-$SERVICE_NAME ./helm \
+                                    --namespace $TARGET_NS \
+                                    --create-namespace \
+                                    --set ${SERVICE_NAME}.image.tag=$DOCKER_TAG \
+                                    --kubeconfig $KUBECONFIG_FILE \
+                                    --rollback-on-failure \
+                                    --timeout 5m
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG_FILE')]) {
+                    sh '''
+                        echo "--- Current Status in ${TARGET_NS} ---"
+                        kubectl --kubeconfig $KUBECONFIG_FILE get pods,svc,networkpolicy -n $TARGET_NS
+                    '''
                 }
             }
         }
     }
 
     post {
-        success {
-            notify('SUCCESS', 'dev-ops@example.com')
-        }
-        failure {
-            notify('FAILURE', 'dev-ops@example.com')
-        }
-        always {
-            cleanWs()
-        }
+        always { cleanWs() }
+        success { echo "Deployment of version ${params.DOCKER_TAG} successful!" }
     }
 }
