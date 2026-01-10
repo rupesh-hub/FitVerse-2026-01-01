@@ -58,26 +58,26 @@ spec:
                 configMapKeyRef:
                   key: DATABASE_NAME
                   name: {{ .Chart.Name }}-config
-          livenessProbe:
-            exec:
-              command:
-                - /bin/sh
-                - -c
-                - mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD}
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
-          readinessProbe:
-            exec:
-              command:
-                - /bin/sh
-                - -c
-                - mysql -h localhost -u root -p${MYSQL_ROOT_PASSWORD} -e "SELECT 1"
-            initialDelaySeconds: 20
-            periodSeconds: 5
-            timeoutSeconds: 3
-            failureThreshold: 3
+{{/*          livenessProbe:*/}}
+{{/*            exec:*/}}
+{{/*              command:*/}}
+{{/*                - /bin/sh*/}}
+{{/*                - -c*/}}
+{{/*                - mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD}*/}}
+{{/*            initialDelaySeconds: 30*/}}
+{{/*            periodSeconds: 10*/}}
+{{/*            timeoutSeconds: 5*/}}
+{{/*            failureThreshold: 3*/}}
+{{/*          readinessProbe:*/}}
+{{/*            exec:*/}}
+{{/*              command:*/}}
+{{/*                - /bin/sh*/}}
+{{/*                - -c*/}}
+{{/*                - mysql -h localhost -u root -p${MYSQL_ROOT_PASSWORD} -e "SELECT 1"*/}}
+{{/*            initialDelaySeconds: 20*/}}
+{{/*            periodSeconds: 5*/}}
+{{/*            timeoutSeconds: 3*/}}
+{{/*            failureThreshold: 3*/}}
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: false
@@ -96,8 +96,14 @@ spec:
           volumeMounts:
             - name: mysql-data
               mountPath: /var/lib/mysql
-            - name: mysql-config
-              mountPath: /etc/mysql/conf.d
+{{/*            - name: mysql-config*/}}
+{{/*              mountPath: /etc/mysql/conf.d*/}}
+      # CORRECTED: volumes is now a sibling of 'containers'
+{{/*      volumes:*/}}
+{{/*        - name: mysql-config*/}}
+{{/*          configMap:*/}}
+{{/*            name: mysql-my-cnf*/}}
+  # volumeClaimTemplates is a sibling of 'template'
   volumeClaimTemplates:
     - metadata:
         name: mysql-data
@@ -107,10 +113,6 @@ spec:
         resources:
           requests:
             storage: {{ .Values.mysql.storage.size | default "10Gi" }}
-        {{- if .Values.mysql.storage.storageClassName }}
-        storageClassName: {{ .Values.mysql.storage.storageClassName }}
-        {{- end }}
-  volumes:
-    - name: mysql-config
-      configMap:
-        name: mysql-my-cnf
+{{/*        {{- if .Values.mysql.storage.storageClassName }}*/}}
+{{/*        storageClassName: {{ .Values.mysql.storage.storageClassName }}*/}}
+{{/*        {{- end }}*/}}
