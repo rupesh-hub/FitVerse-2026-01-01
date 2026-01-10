@@ -3,24 +3,14 @@ kind: Ingress
 metadata:
   name: {{ .Chart.Name }}-ingress
   namespace: {{ .Release.Namespace }}
-  labels:
-    app: {{ .Chart.Name }}
-    version: {{ .Chart.AppVersion }}
   annotations:
-    # Forces Nginx to recognize the regex capture group ($2)
-    # This sends everything after the prefix to the backend
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    # Optional: Increase client body size if you upload files (FitVerse photos, etc.)
-    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
 spec:
   ingressClassName: nginx
   rules:
-    - host: {{ .Values.global.host | default "fitverse.com" }}
-      http:
+    - http: # Notice 'host' is removed entirely
         paths:
-          # 1. Backend API with Regex Capture
-          # This matches: /api/v1.0.0/fit-verse/some-route -> sends /some-route to backend
           - path: /api/v1.0.0/fit-verse(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
@@ -28,8 +18,6 @@ spec:
                 name: {{ .Chart.Name }}-backend
                 port:
                   number: {{ .Values.backend.service.port }}
-
-          # 2. Frontend (Catch-all)
           - path: /
             pathType: Prefix
             backend:
