@@ -19,6 +19,7 @@ pipeline {
     stages {
         stage('Checkout Manifests') {
             steps {
+                // Pulls the latest Helm files from the repo
                 checkoutRepository(env.GIT_URL, env.GIT_BRANCH, env.GIT_CRED_ID)
             }
         }
@@ -26,7 +27,9 @@ pipeline {
         stage('Update Manifests') {
             steps {
                 script {
-                    if (!params.DOCKER_TAG) { error "DOCKER_TAG is missing!" }
+                    if (!params.DOCKER_TAG) {
+                        error "Deployment aborted: DOCKER_TAG is missing!"
+                    }
                     updateManifests(
                         serviceName: params.SERVICE_NAME,
                         version: params.DOCKER_TAG,
@@ -41,28 +44,29 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG_FILE')]) {
                     script {
-                        echo "Deploying ${params.SERVICE_NAME} to Namespace: ${env.TARGET_NS}..."
+                        echo "Deploying ${params.SERVICE_NAME}:${params.DOCKER_TAG} to Namespace: ${env.TARGET_NS}..."
 
-                        withEnv(["HTTP_PROXY=", "http_proxy=", "HTTPS_PROXY=", "https_proxy=", "NO_PROXY=", "no_proxy="]) {
-                            sh '''
-                                # 1. Clean up unmanaged namespace to avoid ownership errors
-                                if kubectl --kubeconfig $KUBECONFIG_FILE get namespace $TARGET_NS >/dev/null 2>&1; then
-                                    if ! kubectl --kubeconfig $KUBECONFIG_FILE get namespace $TARGET_NS -o jsonpath='{.metadata.labels.app\\.kubernetes\\.io/managed-by}' | grep -q "Helm"; then
-                                        echo "Found unmanaged namespace. Deleting for clean Helm install..."
-                                        kubectl --kubeconfig $KUBECONFIG_FILE delete namespace $TARGET_NS --wait=true
-                                    fi
+                        // Use double quotes (""") to allow ${params.VAR} interpolation
+                        sh """
+                            # 1. Clean up unmanaged namespace if it exists without Helm labels
+                            if kubectl --kubeconfig $KUBECONFIG_FILE get namespace ${env.TARGET_NS} >/dev/null 2>&1; then
+                                MANAGED_BY=\$(kubectl --kubeconfig $KUBECONFIG_FILE get namespace ${env.TARGET_NS} -o jsonpath='{.metadata.labels.app\\.kubernetes\\.io/managed-by}' || echo "none")
+                                if [[ "\$MANAGED_BY" != "Helm" ]]; then
+                                    echo "Found unmanaged namespace. Deleting for clean Helm install..."
+                                    kubectl --kubeconfig $KUBECONFIG_FILE delete namespace ${env.TARGET_NS} --wait=true
                                 fi
+                            fi
 
-                                # 2. Helm Deployment
-                                helm upgrade --install fitverse-$SERVICE_NAME ./helm \
-                                    --namespace $TARGET_NS \
-                                    --create-namespace \
-                                    --set ${SERVICE_NAME}.image.tag=$DOCKER_TAG \
-                                    --kubeconfig $KUBECONFIG_FILE \
-                                    --rollback-on-failure \
-                                    --timeout 5m
-                            '''
-                        }
+                            # 2. Helm Deployment
+                            # Ensure the path ./helm contains your Chart.yaml
+                            helm upgrade --install fitverse-${params.SERVICE_NAME} ./helm \
+                                --namespace ${env.TARGET_NS} \
+                                --create-namespace \
+                                --set ${params.SERVICE_NAME}.image.tag=${params.DOCKER_TAG} \
+                                --kubeconfig \$KUBECONFIG_FILE \
+                                --rollback-on-failure \
+                                --timeout 5m
+                        """
                     }
                 }
             }
@@ -71,17 +75,24 @@ pipeline {
         stage('Verify Deployment') {
             steps {
                 withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG_FILE')]) {
-                    sh '''
-                        echo "--- Current Status in ${TARGET_NS} ---"
-                        kubectl --kubeconfig $KUBECONFIG_FILE get pods,svc,networkpolicy -n $TARGET_NS
-                    '''
+                    sh """
+                        echo "--- Current Status in ${env.TARGET_NS} ---"
+                        kubectl --kubeconfig \$KUBECONFIG_FILE get pods,svc -n ${env.TARGET_NS} -l "app.kubernetes.io/instance=fitverse-${params.SERVICE_NAME}"
+                    """
                 }
             }
         }
     }
 
     post {
-        always { cleanWs() }
-        success { echo "Deployment of version ${params.DOCKER_TAG} successful!" }
+        always {
+            cleanWs()
+        }
+        success {
+            echo "Deployment of ${params.SERVICE_NAME}:${params.DOCKER_TAG} successful!"
+        }
+        failure {
+            echo "Deployment failed. Check Helm logs and K8s events."
+        }
     }
 }
