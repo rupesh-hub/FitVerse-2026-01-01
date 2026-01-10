@@ -86,8 +86,32 @@
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/java/com/alfarays/service/ProductService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/resources/application.yml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/resources/data.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helm/readme.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kubernetes/demo.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deployment/DEPLOYMENT-GUIDE.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helm/COMMANDS.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helm/OPERATION-GUIDES.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helm/templates/config-map.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helm/templates/hpa.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helm/templates/ingress.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helm/templates/mysql-configmap.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helm/templates/namespace.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helm/templates/networkpolicy.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helm/templates/pdb.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helm/templates/rbac.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helm/templates/secrets.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vars/checkout.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vars/dependencyCheckScan.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vars/dockerBuild.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vars/dockerPush.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vars/getVersion.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vars/helmDeploy.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vars/mavenExecute.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vars/notify.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vars/npmExecute.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vars/pushImages.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vars/sonarScan.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vars/trivyFsScan.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vars/trivyImageSacn.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vars/updateManifests.groovy" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/.gitattributes" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/deployment/docker/Dockerfile" afterDir="false" />
@@ -391,7 +415,22 @@
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kubernetes/backend-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/kubernetes/backend-deployment.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/3-tier-app-chart/.helmignore" beforeDir="false" afterPath="$PROJECT_DIR$/helm/.helmignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/3-tier-app-chart/Chart.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/helm/Chart.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/3-tier-app-chart/templates/backend-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/helm/templates/backend-deployment.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/3-tier-app-chart/templates/backend-service.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/helm/templates/backend-service.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/3-tier-app-chart/templates/database-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/helm/templates/database-deployment.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/3-tier-app-chart/templates/database-service.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/helm/templates/database-service.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/3-tier-app-chart/templates/frontend-deployment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/helm/templates/frontend-deployment.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/3-tier-app-chart/templates/frontend-service.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/helm/templates/frontend-service.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/3-tier-app-chart/values.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/helm/values.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deployment/backend/Jenkinsfile" beforeDir="false" afterPath="$PROJECT_DIR$/deployment/backend/Jenkinsfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deployment/frontend/Jenkinsfile" beforeDir="false" afterPath="$PROJECT_DIR$/deployment/frontend/Jenkinsfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fitverse-backend-0.1.0.tgz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fitverse-frontend-0.1.0.tgz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gitops/Jenkinsfile" beforeDir="false" afterPath="$PROJECT_DIR$/gitops/Jenkinsfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helm/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/helm/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-chart-0.1.0.tgz" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DEVOPS/DAY-01/backend/src/main/resources/application-dev.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/Main.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/TwoDArray.java" beforeDir="false" />
@@ -554,43 +593,47 @@
     <option name="showLibraryContents" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;Spring Boot.BackendApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/rupeshdulal/Desktop/DEVOPS-FULL-COURSE/FitVerse/kubernetes&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;Jenkins Linter&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/rupeshdulal/Desktop/DEVOPS-FULL-COURSE/FitVerse/frontend/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.BackendApplication.executor": "Run",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/rupeshdulal/Desktop/DEVOPS-FULL-COURSE/FitVerse/gitops/frontend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "Jenkins Linter",
+    "ts.external.directory.path": "/Users/rupeshdulal/Desktop/DEVOPS-FULL-COURSE/FitVerse/frontend/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/gitops/frontend" />
       <recent name="$PROJECT_DIR$/kubernetes" />
       <recent name="$PROJECT_DIR$/docker/docker-compose/production" />
       <recent name="$PROJECT_DIR$/docker/docker-compose/docker" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/gitops" />
+      <recent name="$PROJECT_DIR$/gitops/backend" />
+      <recent name="$PROJECT_DIR$/helm" />
       <recent name="$PROJECT_DIR$/frontend/src/app/users" />
       <recent name="$PROJECT_DIR$/frontend/src/app/auth" />
     </key>
@@ -615,7 +658,8 @@
       <workItem from="1764850180738" duration="24973000" />
       <workItem from="1767785276434" duration="12014000" />
       <workItem from="1767806151621" duration="882000" />
-      <workItem from="1767843891574" duration="25609000" />
+      <workItem from="1767843891574" duration="26333000" />
+      <workItem from="1767941594597" duration="15361000" />
     </task>
     <servers />
   </component>

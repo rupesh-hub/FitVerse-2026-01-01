@@ -1,0 +1,67 @@
+# Default deny all ingress traffic
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Chart.Name }}-default-deny
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+---
+# Allow backend to database
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Chart.Name }}-allow-backend-to-db
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ .Chart.Name }}-mysql
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ .Chart.Name }}-backend
+      ports:
+        - protocol: TCP
+          port: {{ .Values.mysql.service.port }}
+---
+# Allow frontend to backend
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Chart.Name }}-allow-frontend-to-backend
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ .Chart.Name }}-backend
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: {{ .Chart.Name }}-frontend
+      ports:
+        - protocol: TCP
+          port: {{ .Values.backend.service.containerPort }}
+---
+# Allow ingress to frontend
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Chart.Name }}-allow-ingress-frontend
+  namespace: {{ .Release.Namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ .Chart.Name }}-frontend
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: {{ .Values.frontend.service.containerPort }}

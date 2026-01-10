@@ -1,95 +1,81 @@
 @Library('Shared') _
+
 pipeline {
     agent any
-    
+
     parameters {
-        string(name: 'DOCKER_TAG', defaultValue: '', description: 'Docker tag of the image built by the CI job')
+        string(name: 'DOCKER_TAG', defaultValue: '', description: 'Tag passed from CI Job')
+        string(name: 'SERVICE_NAME', defaultValue: 'backend', description: 'backend or frontend')
+    }
+
+    environment {
+        GIT_URL          = "https://github.com/rupesh-hub/FitVerse-2026-01-01.git"
+        GIT_BRANCH       = "main"
+        DOCKERHUB_USER   = "rupesh1997"
+        GIT_CRED_ID      = "git-ssh-cred"
     }
 
     stages {
-        stage("Workspace cleanup"){
-            steps{
-                script{
-                    cleanWs()
-                }
-            }
-        }
-        
-        stage('Git: Code Checkout') {
+        stage('Checkout Manifests') {
             steps {
-                script{
-                    code_checkout("https://github.com/LondheShubham153/Springboot-BankApp.git","DevOps")
-                }
+                // Checkout the root directory (FitVerse)
+                checkoutRepo(env.GIT_URL, env.GIT_BRANCH, env.GIT_CRED_ID)
             }
         }
-        
-        stage('Verify: Docker Image Tags') {
+
+        stage('Update Manifests') {
             steps {
-                script{
-                    echo "DOCKER TAG RECEIVED: ${params.DOCKER_TAG}"
+                script {
+                    if (!params.DOCKER_TAG) {
+                        error "DOCKER_TAG is required. CD aborted."
+                    }
+
+                    // Updates Compose, K8s yaml, and helm/values.yaml in Git
+                    updateManifests(
+                        serviceName: params.SERVICE_NAME,
+                        version: params.DOCKER_TAG,
+                        dockerUser: env.DOCKERHUB_USER
+                    )
                 }
             }
         }
-        
-        
-        stage("Update: Kubernetes manifest"){
-            steps{
-                script{
-                    dir('kubernetes'){
-                        sh """
-                            sed -i -e 's|trainwithshubham/bankapp-eks:.*|trainwithshubham/bankapp-eks:${params.DOCKER_TAG}|g' bankapp-deployment.yaml
-                        """
+
+        stage('Deploy: Docker Compose') {
+            steps {
+                script {
+                    echo "Deploying via Docker Compose..."
+                    dir("docker/docker-compose/production") {
+                        sh "docker compose pull"
+                        sh "docker compose up -d"
                     }
                 }
             }
         }
-        
-        stage("Git: Code update and push to GitHub"){
-            steps{
-                script{
-                    withCredentials([gitUsernamePassword(credentialsId: 'Github-cred', gitToolName: 'Default')]) {
-                        sh '''
-                        echo "Checking repository status: "
-                        git status
-                    
-                        echo "Adding changes to git: "
-                        git add .
-                        
-                        echo "Commiting changes: "
-                        git commit -m "Updated K8s Deployment Docker Image Version"
-                        
-                        echo "Pushing changes to github: "
-                        git push https://github.com/LondheShubham153/Springboot-BankApp.git DevOps
-                    '''
-                    }
+
+        stage('Deploy: Helm (Kubernetes)') {
+            steps {
+                script {
+                    // Uses the Helm folder in the root directory
+                    helmDeploy(
+                        releaseName: 'fitverse-backend',
+                        chartPath:   './helm',
+                        version:     params.DOCKER_TAG,
+                        namespace:   'production'
+                    )
                 }
             }
         }
     }
-  post {
+
+    post {
+        success {
+            notify('SUCCESS', 'dev-ops@example.com')
+        }
+        failure {
+            notify('FAILURE', 'dev-ops@example.com')
+        }
         always {
-            script {
-                emailext attachLog: true,
-                from: 'trainwithshubham@gmail.com',
-                subject: "BankApp Application has been updated and deployed - '${currentBuild.result}'",
-                body: """
-                    <html>
-                    <body>
-                        <div style="background-color: #FFA07A; padding: 10px; margin-bottom: 10px;">
-                            <p style="color: black; font-weight: bold;">Project: ${env.JOB_NAME}</p>
-                        </div>
-                        <div style="background-color: #90EE90; padding: 10px; margin-bottom: 10px;">
-                            <p style="color: black; font-weight: bold;">Build Number: ${env.BUILD_NUMBER}</p>
-                        </div>
-                        <div style="background-color: #87CEEB; padding: 10px; margin-bottom: 10px;">
-                            <p style="color: black; font-weight: bold;">URL: ${env.BUILD_URL}</p>
-                        </div>
-                    </body>
-                    </html>
-            """,
-            to: 'trainwithshubham@gmail.com',
-            mimeType: 'text/html'
-            }
+            cleanWs()
         }
     }
 }

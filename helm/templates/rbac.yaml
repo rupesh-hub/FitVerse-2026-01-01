@@ -1,0 +1,29 @@
+# ServiceAccount for backend
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Chart.Name }}-backend
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Chart.Name }}-backend
+    version: {{ .Chart.AppVersion }}
+---
+# ServiceAccount for frontend
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Chart.Name }}-frontend
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Chart.Name }}-frontend
+    version: {{ .Chart.AppVersion }}
+---
+# ServiceAccount for database
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Chart.Name }}-mysql
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Chart.Name }}-mysql
+    version: {{ .Chart.AppVersion }}

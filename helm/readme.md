@@ -1,85 +1,134 @@
-```shell
-helm install fitverse-backend ./fitverse-backend-helm -n dev --create-namespace
-helm lint ./fitverse-backend-helm
-helm template fitverse-backend ./fitverse-backend-helm
-helm install fitverse-backend ./fitverse-backend-helm
+# Fitverse Helm Chart - Deployment Guide
+
+## Prerequisites
+
+1. **Kubernetes Cluster** (1.20+)
+2. **Helm 3.x** installed
+3. **Cert-Manager** (for HTTPS)
+4. **Ingress Controller** (NGINX recommended)
+5. **Persistent Storage** (if not using local volumes)
+
+## Deployment Steps
+
+### 1. Create Namespace (DevOps)
+```bash
+kubectl create namespace fitverse
 ```
 
-🟢 Basic Helm Commands
-```shell
-helm version
-helm help
-
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo list
+### 2. Install Cert-Manager (if not present)
+```bash
+helm repo add jetstack https://charts.jetstack.io
 helm repo update
-
-helm search repo nginx
-helm search hub wordpress
-
-helm install my-nginx bitnami/nginx
-helm uninstall my-nginx
-
-helm list
-helm list -A        # all namespaces
-
-helm status my-nginx
-helm get all my-nginx
-
-helm install my-nginx bitnami/nginx -n web --create-namespace
-
-helm upgrade my-nginx bitnami/nginx
-helm rollback my-nginx 1
-
-helm install my-nginx bitnami/nginx --dry-run --debug
-
-helm install my-nginx bitnami/nginx -f values.yaml
-helm upgrade my-nginx bitnami/nginx -f values.yaml
-
-helm install my-nginx bitnami/nginx \
-  --set service.type=NodePort
-
-helm show values bitnami/nginx
-
-helm history my-nginx
-
-helm create mychart
-helm lint mychart
-helm template my-nginx bitnami/nginx
-helm template mychart ./mychart
-helm install mychart ./mychart --dry-run
-helm dependency list
-helm dependency update
-helm dependency build
-helm package mychart
-helm push mychart-0.1.0.tgz myrepo
-helm pull bitnami/nginx
-helm pull bitnami/nginx --untar
-helm upgrade my-nginx bitnami/nginx \
-  --atomic --timeout 5m
-helm upgrade my-nginx bitnami/nginx --force
-helm secrets install myapp ./chart
+helm install cert-manager jetstack/cert-manager \
+  --namespace cert-manager --create-namespace \
+  --set installCRDs=true
 ```
 
-```shell
-# DEBUGGING FRONTEND (USEFUL)
-kubectl exec -it fitverse-frontend-847bd6f566-75xmm -n fitverse -- sh
-netstat -tlnp # check in which port frontend is listening
-
-# Few useful command (HELM + KUBECTL)
-helm template 3-tier-app ./3-tier-app-chart
-kubectl port-forward pod/fitverse-frontend-847bd6f566-75xmm -n fitverse 4200:8080 --address=0.0.0.0 &
-kubectl describe pod fitverse-frontend-847bd6f566-75xmm -n fitverse
-kubectl logs fitverse-frontend-847bd6f566-75xmm -n fitverse
-watch kubectl logs fitverse-frontend-847bd6f566-75xmm -n fitverse
-
-kubectl get pods -n fitverse
-kubectl get svc -n fitverse
-
-helm install 3-tier-app ./3-tier-app-chart -n fitverse --create-namespace
-helm uninstall 3-tier-app
-helm uninstall 3-tier-app -n fitverse
-
-kubectl exec -it fitverse-mysql-0 -n fitverse -- bash
-
+### 3. Create ClusterIssuer for Let's Encrypt
+```bash
+kubectl apply -f - <<EOF
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: your-email@example.com
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+EOF
 ```
+
+### 4. Create External Secrets (Using Sealed Secrets or Vault)
+```bash
+# Option A: Using kubectl (NOT production)
+kubectl create secret generic fitverse-secrets \
+  -n fitverse \
+  --from-literal=MYSQL_ROOT_PASSWORD=your-secure-password \
+  --from-literal=JASYPT_ENCRYPTOR_PASSWORD=your-encryption-key \
+  --dry-run=client -o yaml | kubectl apply -f -
+
+# Option B: Use Sealed Secrets (RECOMMENDED for production)
+# Install: helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+# Then seal your secrets
+```
+
+### 5. Deploy Chart
+```bash
+# Create values override file
+cat > custom-values.yaml <<EOF
+global:
+  environment: production
+mysql:
+  storage:
+    storageClassName: "ebs"  # Use your storage class
+backend:
+  image:
+    tag: "1.0.1"
+  replicas: 3
+frontend:
+  image:
+    tag: "1.0.0"
+  replicas: 3
+ingress:
+  host: "fitverse.example.com"  # YOUR DOMAIN
+EOF
+
+# Install
+helm install fitverse . -n fitverse -f custom-values.yaml
+
+# Or upgrade
+helm upgrade fitverse . -n fitverse -f custom-values.yaml
+```
+
+### 6. Verify Deployment
+```bash
+kubectl get all -n fitverse
+kubectl logs -n fitverse -l app=fitverse-backend
+kubectl describe ingress -n fitverse
+```
+
+## Helm Variables Reference
+
+| Variable | Type | Location | Notes |
+|----------|------|----------|-------|
+| `.Release.Namespace` | Built-in | Auto-populated | Kubernetes namespace of release |
+| `.Release.Name` | Built-in | Auto-populated | Name given to helm release |
+| `.Chart.Name` | Built-in | Auto-populated | Chart name from Chart.yaml |
+| `.Chart.AppVersion` | Built-in | Auto-populated | App version from Chart.yaml |
+| `.Values.*` | User-defined | values.yaml | User-configurable values |
+
+## Security Checklist
+
+- [ ] Override default passwords in secrets
+- [ ] Configure HTTPS/TLS with valid certificate
+- [ ] Set proper resource limits (prevents DoS)
+- [ ] Enable RBAC and NetworkPolicies
+- [ ] Use private container registries
+- [ ] Implement Pod Security Standards
+- [ ] Configure liveness/readiness probes
+- [ ] Enable audit logging
+
+## Troubleshooting
+
+**Pod not starting?**
+```bash
+kubectl describe pod <pod-name> -n fitverse
+kubectl logs <pod-name> -n fitverse
+```
+
+**Database connection issues?**
+```bash
+kubectl exec -it <backend-pod> -n fitverse -- sh
+# Inside pod: nc -zv fitverse-mysql 3306
+```
+
+**Ingress not working?**
+```bash
+kubectl get ingress -n fitverse -o yaml
+# Verify cert status: kubectl get certificate -n fitverse

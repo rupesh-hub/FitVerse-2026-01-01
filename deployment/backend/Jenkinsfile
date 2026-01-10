@@ -1,117 +1,144 @@
+@Library('Shared') _
+
 pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_CREDENTIALS_ID = 'docker-hub-credentials'
-        DOCKER_REPO = 'rupesh1997'
-        PROJECT_NAME = 'fit-verse-backend'
-        PROJECT_VERSION = '1.0.0'
+        // Source code
+        GIT_URL          = "https://github.com/rupesh-hub/FitVerse-2026-01-01.git"
+        GIT_BRANCH       = "main"
+
+        // Logical Paths
+        PROJECT_PATH     = "backend"
+
+        // Relative to PROJECT_PATH, the Dockerfile is one level up then in docker/
+        DOCKERFILE_PATH  = "../docker/backend/Dockerfile"
+
+        // Registry & Tools
+        DOCKERHUB_REPO   = "rupesh1997/fitverse-backend"
+        SONAR_API_ENV    = "SonarQube"
+
+        // Other environment variables
+        ACTIVE_PROFILE = "production"
     }
 
     stages {
-
-        stage("Cleanup Workspace") {
+        stage("Workspace Cleanup") {
             steps {
-                deleteDir()
-                echo "✅ Workspace cleaned successfully."
+                cleanWs()
             }
         }
 
-        stage("Checkout repository") {
+        stage('Checkout & Version Extraction') {
             steps {
-                git url: 'https://github.com/rupesh-hub/FirVerse.git', branch: 'main'
+                script {
+                    // 1. Robust Checkout of the full repository
+                    checkoutRepo(env.GIT_URL, env.GIT_BRANCH)
+
+                    // 2. Extract version from backend/pom.xml
+                    env.APP_VERSION = getVersion(env.PROJECT_PATH)
+                    echo "Extracted Version: ${env.APP_VERSION}"
+                }
             }
         }
 
-        stage("Build & Test") {
+        stage('Java: Build & Package') {
+            steps {
+                script {
+                    // Professional practice: 'package' includes compilation and JAR creation
+                    mavenExecute('clean package', env.PROJECT_PATH)
+                }
+            }
+        }
+
+        stage('Security & Quality Gates') {
+            // Running these in parallel makes the pipeline significantly faster
             parallel {
-                stage("Build") {
+                stage('SAST & SCA') {
                     steps {
-                        dir('backend') {
-                            sh "./mvnw clean package -DskipTests"
+                        dir("${env.PROJECT_PATH}") {
+                            script {
+                                // SonarQube for Code Quality
+                                sonarScan(
+                                    projectName: "fitverse-backend",
+                                    projectKey:  "fitverse-backend-key",
+                                    apiEnv: env.SONAR_API_ENV
+                                )
+                                // OWASP for Dependency Vulnerabilities
+                                dependencyCheckScan(scanPath: '.', failThreshold: '7.0')
+                            }
                         }
                     }
                 }
-
-                stage("Unit tests") {
+                stage('Trivy: Filesystem') {
                     steps {
-                        dir('backend') {
-                            sh "./mvnw test"
+                        script {
+                            // Scans the source code directory for hardcoded secrets/vulns
+                            trivyFsScan(env.PROJECT_PATH)
                         }
                     }
                 }
             }
         }
 
-        stage("Build Docker Image") {
+        stage("Docker: Build Image") {
             steps {
-                echo "🛠 Building Docker image..."
-                sh """
-                    cd backend
-                    docker build \
-                      -t ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION} \
-                      -t ${DOCKER_REPO}/${PROJECT_NAME}:latest \
-                      -f ../docker/backend/Dockerfile .
-                """
-            }
-        }
+                dir("${env.PROJECT_PATH}") {
+                    script {
+                        def tags = ["latest", env.APP_VERSION]
+                        def buildParams = [
+                            'PROJECT_VERSION': env.APP_VERSION,
+                            'ACTIVE_PROFILE' : env.ACTIVE_PROFILE
+                        ]
 
-        stage("Trivy Vulnerability Scan") {
-            steps {
-                echo "🔍 Running Trivy scan..."
-                sh """
-                    cd backend
-                    trivy image --exit-code 0 \
-                        --severity HIGH,CRITICAL \
-                        ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION} || true
-                """
-            }
-        }
-
-        stage("Docker Hub Login") {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: env.DOCKER_HUB_CREDENTIALS_ID,
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASSWORD'
-                )]) {
-                    sh "echo '${DOCKER_PASSWORD}' | docker login -u ${DOCKER_USER} --password-stdin"
+                        // Points to the Dockerfile in ../docker/backend/Dockerfile
+                        dockerBuild(env.DOCKERHUB_REPO, tags, buildParams, env.DOCKERFILE_PATH)
+                    }
                 }
             }
         }
 
-        stage("Push Docker Images") {
+        stage('Trivy: Image Scan') {
             steps {
-                echo "🚀 Pushing Docker images..."
-                sh "docker push ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION}"
-                sh "docker push ${DOCKER_REPO}/${PROJECT_NAME}:latest"
+                script {
+                    // Final Gate: Scan the built image before it reaches the registry
+                    trivyScan(["${env.DOCKERHUB_REPO}:${env.APP_VERSION}"])
+                }
             }
         }
 
-        stage("Deployment") {
+        stage("Docker: Push") {
             steps {
-                echo "⚡ Deploying backend application..."
-                sh """
-                    docker system prune -f
-                    docker-compose -f docker/docker-compose/production/docker-compose.yaml pull
-                    docker-compose -f docker/docker-compose/production/docker-compose.yaml down --remove-orphans
-                    docker-compose -f docker/docker-compose/production/docker-compose.yaml up -d
-                """
+               script {
+                  def pushList = ["${env.DOCKERHUB_REPO}:latest", "${env.DOCKERHUB_REPO}:${env.APP_VERSION}"]
+                  // Secure push using credentials handled in library
+                  pushImages(pushList, "dockerhub")
+               }
             }
         }
-
     }
 
     post {
-        always {
-            echo "🧹 Cleaning workspace..."
-            cleanWs()
-        }
-        success {
-            echo "🎉 Backend pipeline completed successfully!"
-        }
-        failure {
-            echo "❌ Backend pipeline failed. Check logs for details."
-        }
+         success {
+            script {
+                // Artifact Management
+                archiveArtifacts artifacts: "${env.PROJECT_PATH}/target/*.jar", allowEmptyArchive: true
+                archiveArtifacts artifacts: '**/dependency-check-report.xml', allowEmptyArchive: true
+
+                // Call library notification
+                notify('SUCCESS', 'dev-team@example.com')
+
+                // Trigger Downstream CD Job
+                build job: "FitVerse-CD", parameters: [
+                    string(name: 'DOCKER_TAG', value: env.APP_VERSION),
+                    string(name: 'SERVICE_NAME', value: 'backend')
+                ]
+            }
+         }
+         failure {
+            script {
+                notify('FAILURE', 'dev-ops-alerts@example.com')
+            }
+         }
     }
 }

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-mysql
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Chart.Name }}-mysql
+    version: {{ .Chart.AppVersion }}
+spec:
+  clusterIP: None
+  ports:
+    - port: {{ .Values.mysql.service.port }}
+      targetPort: {{ .Values.mysql.service.targetPort }}
+      protocol: TCP
+      name: mysql
+  selector:
+    app: {{ .Chart.Name }}-mysql
