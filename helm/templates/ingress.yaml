@@ -4,24 +4,16 @@ metadata:
   name: {{ .Chart.Name }}-ingress
   namespace: {{ .Release.Namespace }}
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
   rules:
-    - http: # Notice 'host' is removed entirely
+    - http:
         paths:
-          - path: /api/v1.0.0/fit-verse(/|$)(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: {{ .Chart.Name }}-backend
-                port:
-                  number: {{ .Values.backend.service.port }}
           - path: /
             pathType: Prefix
             backend:
               service:
                 name: {{ .Chart.Name }}-frontend
                 port:
-                  number: {{ .Values.frontend.service.port }}
+                  number: 4200

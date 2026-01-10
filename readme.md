@@ -9,6 +9,7 @@
   kubectl get svc -n fitverse
   kubectl describe pod <pod> -n fitverse
   kubectl logs <pod> -n fitverse
+  kubectl get endpoints -n fitverse
   
   lsof -i :8181
   netstat -tulpn | grep 8181
