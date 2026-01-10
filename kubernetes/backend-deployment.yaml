@@ -21,7 +21,7 @@ spec:
           command: ['sh', '-c', "until nc -zv mysql 3306; do echo waiting for mysql; sleep 2; done"]
       containers:
         - name: fitverse-backend
-          image: rupesh1997/fitverse-backend:1.0.1
+          image: rupesh1997/fitverse-backend:latest
           ports:
             - containerPort: 8181
           env:
