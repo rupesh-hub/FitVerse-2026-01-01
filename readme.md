@@ -24,8 +24,9 @@
   
   
   #Ingress
+  kubectl get ingress fitverse-ingress -n fitverse -o yaml
   kubectl get svc -A | grep ingress
-  kubectl port-forward svc/ingress-nginx-controller -n ingress-nginx 8282:80
+  sudo -E kubectl port-forward svc/ingress-nginx-controller -n ingress-nginx 80:80 --address=0.0.0.0
 ```
 
 ```bash
