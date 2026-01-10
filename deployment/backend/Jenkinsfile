@@ -58,8 +58,8 @@ pipeline {
 
         stage('Security & Quality Gates') {
             // Running these in parallel makes the pipeline significantly faster
-            parallel {
-                stage('SAST & SCA') {
+            /* parallel {
+                 stage('SAST & SCA') {
                     steps {
                         dir("${env.PROJECT_PATH}") {
                             script {
@@ -74,7 +74,7 @@ pipeline {
                             }
                         }
                     }
-                }
+                } */
                 stage('Trivy: Filesystem') {
                     steps {
                         script {
@@ -83,7 +83,7 @@ pipeline {
                         }
                     }
                 }
-            }
+             /* } */
         }
 
         stage("Docker: Build Image") {

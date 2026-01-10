@@ -389,6 +389,7 @@
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/docker-compose.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/java/com/alfarays/resource/WelcomeResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/DEV-SEC-OPS-DEMO/src/main/resources/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deployment/backend/Jenkinsfile" beforeDir="false" afterPath="$PROJECT_DIR$/deployment/backend/Jenkinsfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DEVOPS/DAY-01/backend/src/main/resources/application-dev.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/Main.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../DSA/com.alsarays.app/MASTERCLASS/twodarray/TwoDArray.java" beforeDir="false" />
@@ -618,7 +619,7 @@
       <workItem from="1767806151621" duration="882000" />
       <workItem from="1767843891574" duration="26333000" />
       <workItem from="1767941594597" duration="15361000" />
-      <workItem from="1768025416846" duration="15831000" />
+      <workItem from="1768025416846" duration="16355000" />
     </task>
     <servers />
   </component>
