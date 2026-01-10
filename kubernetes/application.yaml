@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-helm-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/rupesh-hub/FitVerse-2026-01-01.git'
+    targetRevision: HEAD
+    path: helm  # Path to the folder containing Chart.yaml
+    helm:
+      # You can pass custom values directly here
+      values: |
+        replicaCount: 1
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: fitverse
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
