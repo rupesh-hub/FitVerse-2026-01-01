@@ -5,17 +5,15 @@ global:
     environment: production
     managed-by: helm
     app: fitverse
-
 # Namespace configuration - namespace must exist before helm install
 namespace:
-  create: false  # Set to false - let DevOps pre-create namespace
-  name: "fitverse"  # Explicit namespace reference
-
+  create: false # Set to false - let DevOps pre-create namespace
+  name: "fitverse" # Explicit namespace reference
 # Database Configuration
 mysql:
   replicas: 1
   environment:
-    MYSQL_ROOT_PASSWORD: "root"  # CRITICAL: Override via external secrets
+    MYSQL_ROOT_PASSWORD: "root" # CRITICAL: Override via external secrets
     MYSQL_DATABASE: "fitverse"
   image:
     repository: mysql
@@ -28,7 +26,7 @@ mysql:
     containerPort: 3306
   storage:
     size: 20Gi
-    storageClassName: "standard"  # Use "fast-ssd" or "ebs" for production
+    storageClassName: "standard" # Use "fast-ssd" or "ebs" for production
   resources:
     limits:
       cpu: 1000m
@@ -38,7 +36,6 @@ mysql:
       memory: 1Gi
   autoscaling:
     enabled: false
-
 # Backend (Spring Boot API) Configuration
 backend:
   replicas: 1
@@ -69,7 +66,6 @@ backend:
     maxReplicas: 2
     targetCPUUtilizationPercentage: 70
     targetMemoryUtilizationPercentage: 80
-
 # Frontend (Angular) Configuration
 frontend:
   replicas: 1
@@ -94,24 +90,20 @@ frontend:
     minReplicas: 1
     maxReplicas: 2
     targetCPUUtilizationPercentage: 70
-
 # Ingress Configuration
 ingress:
   enabled: true
-  className: "nginx"  # Ensure ingress controller matches your cluster
-  host: "fitverse.example.com"  # Update to your domain
+  className: "nginx" # Ensure ingress controller matches your cluster
+  host: "fitverse.example.com" # Update to your domain
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
     nginx.ingress.kubernetes.io/rewrite-target: /
-
 # Security & Encryption
 encryption:
-  jasyptPassword: "change-this-secure-password"  # CRITICAL: Use external secrets
-
+  jasyptPassword: "change-this-secure-password" # CRITICAL: Use external secrets
 # Image Pull Secret for private registries
 imagePullSecret: "{}"
-
 # Resource Quotas per namespace
 resourceQuota:
   enabled: true

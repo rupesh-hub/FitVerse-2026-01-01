@@ -20,6 +20,8 @@ services:
     extends:
       file: common-config.yaml
       service: network-configuration
+  '""':
+    image: ""
 networks:
   fitverse-network:
     driver: bridge
