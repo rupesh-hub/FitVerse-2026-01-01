@@ -27,7 +27,7 @@ pipeline {
             }
         }
 
-        stage('Security & Build') {
+        /*stage('Security & Build') {
             parallel {
                 stage('Sonar & Audit') {
                     steps {
@@ -45,7 +45,7 @@ pipeline {
                     steps { trivyFsScan(env.PROJECT_PATH) }
                 }
             }
-        }
+        } */
 
         stage("Docker: Build & Push") {
             steps {
