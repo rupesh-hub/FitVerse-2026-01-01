@@ -59,7 +59,7 @@ pipeline {
                         ]
 
                         dockerBuild(env.DOCKERHUB_REPO, tags, buildParams, env.DOCKERFILE_PATH)
-                        trivyScan(["${env.DOCKERHUB_REPO}:${env.APP_VERSION}"])
+                        trivyImageScan(["${env.DOCKERHUB_REPO}:${env.APP_VERSION}"])
                         pushImages(["${env.DOCKERHUB_REPO}:latest", "${env.DOCKERHUB_REPO}:${env.APP_VERSION}"], "dockerhub")
                     }
                 }
