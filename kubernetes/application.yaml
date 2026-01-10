@@ -1,16 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: my-helm-app
+  name: fitverse
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: 'https://github.com/rupesh-hub/FitVerse-2026-01-01.git'
-    targetRevision: HEAD
-    path: helm  # Path to the folder containing Chart.yaml
+    targetRevision: main
+    path: helm # Path inside the repo where Chart.yaml lives
     helm:
-      # You can pass custom values directly here
+      # Overrides for Helm chart values
       values: |
         replicaCount: 1
   destination:
@@ -18,5 +18,13 @@ spec:
     namespace: fitverse
   syncPolicy:
     automated:
-      prune: true
-      selfHeal: true
+      prune: true      # Removes resources from cluster that are deleted in Git
+      selfHeal: true   # Overwrites manual changes made with kubectl
+    syncOptions:
+      - CreateNamespace=true  # Automatically creates the 'fitverse' namespace
+    retry:
+      limit: 5 # Number of failed sync attempts before giving up
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

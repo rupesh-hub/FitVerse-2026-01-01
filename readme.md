@@ -19,6 +19,13 @@
   kubectl port-forward svc/fitverse-frontend -n fitverse 8181:8181 --address=0.0.0.0 &
   
   helm uninstall fitverse -n fitverse
+  
+  kubectl get all -n fitverse
+  
+  
+  #Ingress
+  kubectl get svc -A | grep ingress
+  kubectl port-forward svc/ingress-nginx-controller -n ingress-nginx 8282:80
 ```
 
 ```bash
@@ -29,6 +36,28 @@ kubectl create namespace argocd
 
 # Install the standard ArgoCD components
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+#Admin password
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
+#Check all
+kubectl get pods -n argocd
+kubectl get svc -n argocd
+
+#Apply application.yaml
+kubectl apply -f kubernetes/application.yaml
+
+# Get application
+kubectl get application -n argocd fitverse
+
+#Port forward
+kubectl port-forward svc/argocd-server -n argocd 8081:443 --address=0.0.0.0
+
+# Debug commands if it takes long to run
+kubectl describe pod argocd-server-b8969d655-g8gd9 -n argocd
+kubectl describe pod -n argocd -l app.kubernetes.io/name=argocd-server
+
+# Username: admin password: xtTjW8ecKzh6ImnS
 ```
 
 ```yaml

@@ -4,18 +4,29 @@ metadata:
   name: fitverse-ingress
   namespace: fitverse
   annotations:
-    # This tells the NGINX Controller how to handle the traffic
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    # Important: Do NOT use rewrite-target: / if your backend expects the /api prefix.
+    # If your backend needs /api removed before it hits the code, keep the annotation.
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx
   rules:
-    - host: fitverse.com
+    - host: fitverse.com  # Or use your IP 192.168.1.70
       http:
         paths:
+          # 1. Backend API Route
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: fitverse-backend # Ensure this matches your backend service name
+                port:
+                  number: 8080 # The port your backend service listens on
+
+          # 2. Frontend Route (Default)
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: fitverse-frontend-service
+                name: fitverse-frontend
                 port:
                   number: 4200
