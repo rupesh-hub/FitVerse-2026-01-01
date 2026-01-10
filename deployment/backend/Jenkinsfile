@@ -3,6 +3,11 @@
 pipeline {
     agent any
 
+    tools {
+       jdk 'Java17'
+       maven 'maven-3'
+    }
+
     environment {
         // Source code
         GIT_URL          = "https://github.com/rupesh-hub/FitVerse-2026-01-01.git"
