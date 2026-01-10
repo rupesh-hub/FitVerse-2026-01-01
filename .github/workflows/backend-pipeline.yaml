@@ -18,7 +18,7 @@ jobs:
     name: Build & Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkoutRepository@v4
 
       - uses: actions/setup-java@v4
         with:
@@ -38,7 +38,7 @@ jobs:
     outputs:
       VERSION: ${{ steps.extract_version.outputs.VERSION }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkoutRepository@v4
 
       - name: Extract version
         id: extract_version
@@ -78,7 +78,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkoutRepository@v4
         with:
           token: ${{ secrets.TOKEN }}
 

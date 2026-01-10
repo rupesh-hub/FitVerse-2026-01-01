@@ -86,6 +86,7 @@
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/java/com/alfarays/service/ProductService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/resources/application.yml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../DEVOPS-PRACTICES/OAUTH-DEMO/resource-server-application/src/main/resources/data.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deployment/INSTALLATION-GUIDELINES.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/.gitattributes" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../JENKINS-MASTER/JENKINS-DEMO-PROJECT-01/deployment/docker/Dockerfile" afterDir="false" />
@@ -619,7 +620,7 @@
       <workItem from="1767806151621" duration="882000" />
       <workItem from="1767843891574" duration="26333000" />
       <workItem from="1767941594597" duration="15361000" />
-      <workItem from="1768025416846" duration="11791000" />
+      <workItem from="1768025416846" duration="14410000" />
     </task>
     <servers />
   </component>

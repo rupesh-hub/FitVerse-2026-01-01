@@ -17,7 +17,7 @@
   kill <PID>
   
   kubectl port-forward svc/fitverse-backend -n fitverse 8181:8181 --address=0.0.0.0 &
-  kubectl port-forward svc/fitverse-frontend -n fitverse 8181:8181 --address=0.0.0.0 &
+  kubectl port-forward svc/fitverse-frontend -n fitverse 4200:4200 --address=0.0.0.0 &
   
   helm uninstall fitverse -n fitverse
   

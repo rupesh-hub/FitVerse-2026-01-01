@@ -28,23 +28,3 @@ def call(String status, String recipient) {
             mimeType: 'text/html'
     )
 }
-
-/**
- post {
-     success {
-        archiveArtifacts artifacts: '*.xml', followSymlinks: false
-
-        // Use your library for notification
-        notifyStatus('SUCCESS', 'dev-team@example.com')
-
-        // Trigger CD Job
-        build job: "BankApp-CD", parameters: [
-            string(name: 'DOCKER_TAG', value: "${params.DOCKER_TAG}")
-        ]
-     }
-     failure {
-        // Use your library to alert on failure with log causes
-        notifyStatus('FAILURE', 'dev-ops-alerts@example.com')
-     }
- }
- */

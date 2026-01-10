@@ -33,7 +33,7 @@ pipeline {
             steps {
                 script {
                     // 1. Robust Checkout of the full repository
-                    checkoutRepo(env.GIT_URL, env.GIT_BRANCH)
+                    checkoutRepository(env.GIT_URL, env.GIT_BRANCH)
 
                     // 2. Extract version from backend/pom.xml
                     env.APP_VERSION = getVersion(env.PROJECT_PATH)
@@ -126,7 +126,7 @@ pipeline {
                 archiveArtifacts artifacts: '**/dependency-check-report.xml', allowEmptyArchive: true
 
                 // Call library notification
-                notify('SUCCESS', 'dev-team@example.com')
+                notify('SUCCESS', 'dulalrupesh77@gmail.com')
 
                 // Trigger Downstream CD Job
                 build job: "FitVerse-CD", parameters: [
@@ -137,7 +137,7 @@ pipeline {
          }
          failure {
             script {
-                notify('FAILURE', 'dev-ops-alerts@example.com')
+                notify('FAILURE', 'dulalrupesh77@gmail.com')
             }
          }
     }
