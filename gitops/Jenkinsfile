@@ -17,14 +17,14 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Manifests') {
+        stage('Checkout repository') {
             steps {
                 // Pulls the latest Helm files from the repo
                 checkoutRepository(env.GIT_URL, env.GIT_BRANCH, env.GIT_CRED_ID)
             }
         }
 
-        stage('Update Manifests') {
+        stage('Update manifests') {
             steps {
                 script {
                     if (!params.DOCKER_TAG) {
@@ -46,7 +46,7 @@ pipeline {
                     script {
                         echo "Deploying ${params.SERVICE_NAME}:${params.DOCKER_TAG} to Namespace: ${env.TARGET_NS}..."
 
-                        // Use double quotes (""") to allow ${params.VAR} interpolation
+                        // double quotes (""") to allow ${params.VAR} interpolation
                         sh """
                             # 1. Clean up unmanaged namespace if it exists without Helm labels
                             if kubectl --kubeconfig $KUBECONFIG_FILE get namespace ${env.TARGET_NS} >/dev/null 2>&1; then

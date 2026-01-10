@@ -83,5 +83,5 @@ OR
 ```shell
 # Forgot to pull before push
 git pull --rebase origin main
-git push -U origin main
+git push -u origin main
 ```

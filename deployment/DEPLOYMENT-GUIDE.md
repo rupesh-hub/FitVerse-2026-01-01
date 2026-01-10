@@ -1,622 +1,511 @@
-# FitVerse: Complete Production Deployment Guide (2026)
+# FitVerse: Complete CI/CD & Deployment Guide (2026)
+## From Zero to Production - Step by Step
+
+---
 
 ## Table of Contents
-1. [Quick Start](#quick-start)
-2. [Prerequisites & Setup](#prerequisites--setup)
-3. [Multi-Environment Deployment](#multi-environment-deployment)
-4. [Helm Operations](#helm-operations)
-5. [CI/CD Pipeline with Jenkins](#cicd-pipeline-with-jenkins)
-6. [ArgoCD GitOps Workflow](#argocd-gitops-workflow)
-7. [Scaling & Performance](#scaling--performance)
-8. [Upgrades & Rollbacks](#upgrades--rollbacks)
-9. [Monitoring & Debugging](#monitoring--debugging)
-10. [Disaster Recovery](#disaster-recovery)
-11. [Security Operations](#security-operations)
-12. [Troubleshooting](#troubleshooting)
-13. [Cheat Sheet](#cheat-sheet)
+1. [Quick Start (5 minutes)](#quick-start)
+2. [Part 1: Install & Setup Jenkins](#part-1-jenkins-setup)
+3. [Part 2: Configure Jenkins Tools & Credentials](#part-2-jenkins-configuration)
+4. [Part 3: SonarQube Setup](#part-3-sonarqube-setup)
+5. [Part 4: Create CI/CD Pipelines](#part-4-cicd-pipelines)
+6. [Part 5: Kubernetes Deployment](#part-5-kubernetes-deployment)
+7. [Part 6: Testing & Troubleshooting](#part-6-testing)
+8. [Reference: Commands & Checklists](#reference)
 
 ---
 
-## Quick Start
+## Quick Start (5 minutes)
 
-**Deploy to Production in 5 minutes:**
-
-```bash
-# 1. Create namespace
-kubectl create namespace fitverse-prod
-
-# 2. Install prerequisites (one-time)
-helm repo add jetstack https://charts.jetstack.io && helm repo update
-helm install cert-manager jetstack/cert-manager -n cert-manager --create-namespace --set installCRDs=true
-
-# 3. Deploy FitVerse with production values
-helm install fitverse ./helm -n fitverse-prod \
-  --values values-prod.yaml \
-  --set global.environment=production \
-  --wait --timeout=10m
-
-# 4. Verify deployment
-helm status fitverse -n fitverse-prod
-kubectl get all -n fitverse-prod
-kubectl get ingress -n fitverse-prod
-```
+**Already have Jenkins/SonarQube running? Jump to:**
+- [Create CI Pipeline](#ci-pipeline-setup)
+- [Create CD Pipeline](#cd-pipeline-setup)
+- [Deploy to Kubernetes](#helm-deployment)
 
 ---
 
-## Prerequisites & Setup
+# PART 1: JENKINS SETUP (UBUNTU/LINUX)
 
-### System Requirements
-- Kubernetes Cluster v1.24+ (GKE, EKS, AKS, or on-prem)
-- Helm 3.12+
-- kubectl configured with cluster access
-- Docker Registry access (DockerHub or private registry)
-- Git repository for manifests
+## Prerequisites
+- Ubuntu 20.04 LTS or later
+- 4GB+ RAM, 20GB+ disk space
+- Sudo access
+- Internet connection
 
-### Install Tools (Ubuntu/Linux)
+## Step 1: Update System & Install Java 17
 
 ```bash
-# Install Helm
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-helm version
-
-# Install kubectl
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
-# Install yq (YAML manipulation)
-sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
-sudo chmod +x /usr/bin/yq
-
-# Install Trivy (vulnerability scanning)
-wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
-sudo apt-get update && sudo apt-get install trivy -y
+sudo apt-get update
+sudo apt-get upgrade -y
+sudo apt-get install -y openjdk-17-jdk openjdk-17-jre
+java -version  # Should show Java 17.x.x
 ```
 
-### Create ClusterIssuer for Let's Encrypt TLS
+## Step 2: Install Jenkins
 
 ```bash
-kubectl apply -f - <<EOF
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: letsencrypt-prod
-spec:
-  acme:
-    server: https://acme-v02.api.letsencrypt.org/directory
-    email: ops@fitverse.com
-    privateKeySecretRef:
-      name: letsencrypt-prod
-    solvers:
-    - http01:
-        ingress:
-          class: nginx
+# Add Jenkins repository
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+# Install Jenkins
+sudo apt-get update
+sudo apt-get install -y jenkins
+```
+
+## Step 3: Start Jenkins Service
+
+```bash
+sudo systemctl start jenkins
+sudo systemctl enable jenkins  # Auto-start on reboot
+sudo systemctl status jenkins  # Verify running
+```
+
+## Step 4: Unlock Jenkins
+
+```bash
+# Get admin password
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+
+1. Open browser: `http://localhost:8080`
+2. Paste the password
+3. Click **Continue**
+4. Click **Install suggested plugins** (wait 5-10 minutes)
+5. Create admin user:
+    - Username: `admin`
+    - Password: `<choose-strong-password>`
+    - Email: `your-email@gmail.com`
+6. Click **Save and Continue**
+7. Jenkins URL: `http://<your-server-ip>:8080/`
+8. Click **Save and Finish**
+
+✅ **Jenkins is now ready!**
+
+---
+
+# PART 2: JENKINS CONFIGURATION
+
+## Installing Required Plugins
+
+Your pipelines need these plugins. Let's install them:
+
+1. Go to **Manage Jenkins** → **Manage Plugins**
+2. Click **Available plugins** tab
+3. For each plugin below: Search → Check box → Click **Install without restart**
+
+| Plugin Name | Search Term | Purpose |
+|---|---|---|
+| Pipeline | `Pipeline` | Declarative pipelines |
+| Pipeline: Shared Groovy Libraries | `pipeline-model-definition` | Shared libraries |
+| Docker | `docker-plugin` | Docker integration |
+| Docker Pipeline | `docker-workflow` | Docker in pipelines |
+| SonarQube Scanner | `sonar` | Code quality scanning |
+| Email Extension | `email-ext` | Email notifications |
+| GitHub | `github` | GitHub integration |
+| Kubernetes | `kubernetes` | Kubernetes support |
+| Kubernetes CLI | `kubernetes-cli` | kubectl commands |
+| Helm | `helm` | Helm deployment |
+
+**After installing all plugins:**
+- Go to **Manage Jenkins** → **System Configuration**
+- Restart if prompted
+
+---
+
+## Configuring Tools
+
+### Configure Java 17
+
+1. Go to **Manage Jenkins** → **Tools**
+2. Find **JDK installations** section
+3. Click **Add JDK**
+4. Fill in:
+    - **Name**: `Java17` (MUST match pipeline exactly)
+    - **JAVA_HOME**: Leave empty (auto-detect)
+    - Check **Install automatically**
+    - Version: Select latest `jdk-17.x.x`
+5. Click **Save**
+
+### Configure Maven 3
+
+1. In same **Tools** section
+2. Find **Maven installations**
+3. Click **Add Maven**
+4. Fill in:
+    - **Name**: `maven-3` (MUST match pipeline exactly)
+    - **MAVEN_HOME**: Leave empty
+    - Check **Install automatically**
+    - Version: Select latest `3.9.x`
+5. Click **Save**
+
+---
+
+## Setting Up Global Credentials
+
+Your pipeline needs 3 credentials. Let's add them:
+
+### Credential 1: GitHub SSH Key
+
+**Step 1: Generate SSH key** (if you don't have one):
+
+```bash
+ssh-keygen -t ed25519 -C "jenkins@fitverse"
+# Press Enter for default path
+# Press Enter for no passphrase
+cat ~/.ssh/id_ed25519.pub  # Copy this output
+```
+
+**Step 2: Add to GitHub:**
+1. GitHub → Settings → SSH and GPG keys
+2. Click **New SSH key**
+3. Title: `Jenkins FitVerse`
+4. Paste the public key
+5. Click **Add SSH key**
+
+**Step 3: Add to Jenkins:**
+1. Go to **Manage Jenkins** → **Credentials**
+2. Click **System** (on left)
+3. Click **Global credentials (unrestricted)**
+4. Click **+ Add Credentials**
+5. Fill in:
+    - **Kind**: `SSH Username with private key`
+    - **ID**: `git-ssh-cred`
+    - **Description**: `GitHub SSH Key for FitVerse`
+    - **Username**: `git`
+    - **Private Key**: Click **Enter directly**, paste entire content of `~/.ssh/id_ed25519`
+6. Click **Create**
+
+### Credential 2: Docker Registry
+
+1. Go to **Manage Jenkins** → **Credentials** → **System** → **Global credentials**
+2. Click **+ Add Credentials**
+3. Fill in:
+    - **Kind**: `Username with password`
+    - **Scope**: `Global`
+    - **Username**: `your-dockerhub-username`
+    - **Password**: `your-dockerhub-token` (Get from DockerHub → Settings → Security)
+    - **ID**: `docker-cred`
+    - **Description**: `Docker Registry Credentials`
+4. Click **Create**
+
+### Credential 3: SonarQube Token
+
+(We'll generate this in Part 3, then add here)
+
+---
+
+## Configuring Shared Libraries
+
+Shared libraries contain reusable pipeline functions.
+
+### Step 1: Create Shared Library Repository
+
+```bash
+mkdir -p ~/fitverse-shared-library/vars
+cd ~/fitverse-shared-library
+
+# Create directory structure
+mkdir -p vars resources/groovy
+
+# Create a sample function
+cat > vars/checkoutRepository.groovy << 'EOF'
+def call(Map config) {
+    checkout([
+        $class: 'GitSCM',
+        branches: [[name: '*/main']],
+        userRemoteConfigs: [[
+            url: config.repo_url,
+            credentialsId: config.credentials_id
+        ]]
+    ])
+    echo "✓ Repository checked out successfully"
+}
 EOF
+
+git init
+git add .
+git commit -m "Initial commit: shared library structure"
+git remote add origin https://github.com/your-username/fitverse-shared-library.git
+git push -u origin main
 ```
+
+### Step 2: Configure in Jenkins
+
+1. Go to **Manage Jenkins** → **System**
+2. Scroll to **Global Pipeline Libraries**
+3. Click **Add**
+4. Fill in:
+    - **Name**: `shared-lib`
+    - **Default version**: `main`
+    - **Repository URL**: `https://github.com/your-username/fitverse-shared-library.git`
+    - **Credentials**: Select `git-ssh-cred`
+5. Click **Save**
 
 ---
 
-## Multi-Environment Deployment
+# PART 3: SONARQUBE SETUP
 
-### Development Environment
+## Installation Options
+
+### Option A: Docker (Quickest - Recommended)
+
 ```bash
-# Dev cluster typically runs on minimal resources
-helm install fitverse ./helm -n fitverse-dev --create-namespace \
-  --values values-dev.yaml \
-  --set global.environment=development \
-  --set backend.replicas=1 \
-  --set frontend.replicas=1 \
-  --set mysql.storage.size=5Gi
+docker run -d \
+  --name sonarqube \
+  -p 9000:9000 \
+  --restart unless-stopped \
+  sonarqube:lts
 
-# Verify
-helm status fitverse -n fitverse-dev
+# Wait 30 seconds, then verify:
+curl -s http://localhost:9000/api/system/status
+# Should return: {"status":"UP"}
 ```
 
-**values-dev.yaml:**
-```yaml
-global:
-  environment: development
-backend:
-  replicas: 1
-  autoscaling:
-    enabled: false
-  resources:
-    requests:
-      cpu: 100m
-      memory: 256Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-frontend:
-  replicas: 1
-  autoscaling:
-    enabled: false
-  resources:
-    requests:
-      cpu: 50m
-      memory: 128Mi
-    limits:
-      cpu: 250m
-      memory: 256Mi
-mysql:
-  replicas: 1
-  storage:
-    size: 5Gi
-    storageClassName: "standard"
-ingress:
-  host: "fitverse-dev.example.com"
-```
+### Option B: Ubuntu Server Installation
 
-### Staging Environment
 ```bash
-# Staging tests production configs with real load
-helm install fitverse ./helm -n fitverse-staging --create-namespace \
-  --values values-staging.yaml \
-  --set global.environment=staging \
-  --set backend.replicas=2 \
-  --set mysql.storage.size=50Gi
+# Install Java 11+ (if not already installed)
+sudo apt-get install -y openjdk-17-jdk
+
+# Create sonar user
+sudo useradd -m -s /bin/bash sonar
+
+# Download & install SonarQube
+cd /opt
+sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-10.3.0.82913.zip
+sudo unzip sonarqube-10.3.0.82913.zip
+sudo mv sonarqube-10.3.0.82913 sonarqube
+sudo chown -R sonar:sonar /opt/sonarqube
+
+# Create systemd service
+sudo tee /etc/systemd/system/sonarqube.service > /dev/null <<EOF
+[Unit]
+Description=SonarQube
+After=network.target
+
+[Service]
+Type=forking
+User=sonar
+ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Start service
+sudo systemctl daemon-reload
+sudo systemctl enable sonarqube
+sudo systemctl start sonarqube
+sudo systemctl status sonarqube
 ```
 
-**values-staging.yaml:**
-```yaml
-global:
-  environment: staging
-backend:
-  replicas: 2
-  autoscaling:
-    enabled: true
-    minReplicas: 2
-    maxReplicas: 3
-    targetCPUUtilizationPercentage: 70
-frontend:
-  replicas: 2
-  autoscaling:
-    enabled: true
-    minReplicas: 2
-    maxReplicas: 3
-mysql:
-  replicas: 1
-  storage:
-    size: 50Gi
-    storageClassName: "fast-ssd"
-ingress:
-  host: "fitverse-staging.example.com"
-```
+## Access SonarQube
 
-### Production Environment
-```bash
-# Production uses high availability setup
-helm install fitverse ./helm -n fitverse-prod --create-namespace \
-  --values values-prod.yaml \
-  --set global.environment=production \
-  --set backend.replicas=3 \
-  --set mysql.storage.size=100Gi \
-  --wait --timeout=15m
-```
+Open browser: `http://localhost:9000` (or `http://<your-server-ip>:9000`)
+- **Username**: `admin`
+- **Password**: `admin`
 
-**values-prod.yaml:**
-```yaml
-global:
-  environment: production
-backend:
-  replicas: 3
-  autoscaling:
-    enabled: true
-    minReplicas: 3
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 70
-  resources:
-    requests:
-      cpu: 500m
-      memory: 768Mi
-    limits:
-      cpu: 1000m
-      memory: 1.5Gi
-frontend:
-  replicas: 3
-  autoscaling:
-    enabled: true
-    minReplicas: 3
-    maxReplicas: 5
-mysql:
-  replicas: 1
-  storage:
-    size: 100Gi
-    storageClassName: "fast-ssd"
-  backup:
-    enabled: true
-    schedule: "0 2 * * *"
-ingress:
-  host: "fitverse.example.com"
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-```
+### Change Default Password
+
+1. Click top-right **admin** → **My Account**
+2. Click **Security** tab
+3. Change password to something secure
+4. Save
 
 ---
 
-## Helm Operations
+## Generate SonarQube Token
 
-### Install Release
-```bash
-# Basic install
-helm install fitverse ./helm -n fitverse-prod --create-namespace
+**What is a token?** It's like a password that Jenkins uses to authenticate with SonarQube.
 
-# With custom values
-helm install fitverse ./helm -n fitverse-prod \
-  --values values-prod.yaml
+### Step 1: Create Token
 
-# With overrides
-helm install fitverse ./helm -n fitverse-prod \
-  --set backend.image.tag=2.0.0 \
-  --set mysql.storage.size=100Gi
+1. In SonarQube, click top-right **admin** → **My Account**
+2. Click **Security** tab
+3. Under "Generate Tokens" section:
+    - **Token name**: `jenkins-sonar-token`
+    - Click **Generate**
+4. **Copy the token immediately** (you won't see it again!)
 
-# Dry-run (preview without deploying)
-helm install fitverse ./helm -n fitverse-prod --dry-run --debug
-```
+Example token: `squ_abc123def456ghi789jkl012mno345pqr`
 
-### Verify Installation
-```bash
-# Check release status
-helm status fitverse -n fitverse-prod
+### Step 2: Add to Jenkins Credentials
 
-# List all releases
-helm list -n fitverse-prod
-
-# Get rendered manifests
-helm get manifest fitverse -n fitverse-prod
-
-# View values used
-helm get values fitverse -n fitverse-prod
-```
-
-### Upgrade Release
-```bash
-# Upgrade with new values
-helm upgrade fitverse ./helm -n fitverse-prod \
-  --values values-prod.yaml
-
-# Upgrade specific component
-helm upgrade fitverse ./helm -n fitverse-prod \
-  --reuse-values \
-  --set backend.image.tag=2.0.0 \
-  --wait --timeout=5m
-
-# Upgrade with atomic (auto-rollback on failure)
-helm upgrade fitverse ./helm -n fitverse-prod \
-  --values values-prod.yaml \
-  --atomic
-```
-
-### Rollback Release
-```bash
-# Rollback to previous revision
-helm rollback fitverse -n fitverse-prod
-
-# Rollback to specific revision
-helm rollback fitverse 2 -n fitverse-prod
-
-# View rollout history
-helm history fitverse -n fitverse-prod
-```
-
-### Uninstall Release
-```bash
-# Delete release, keep history
-helm uninstall fitverse -n fitverse-prod --keep-history
-
-# Completely remove release
-helm uninstall fitverse -n fitverse-prod
-```
+1. Go to **Manage Jenkins** → **Credentials** → **System** → **Global credentials**
+2. Click **+ Add Credentials**
+3. Fill in:
+    - **Kind**: `Secret text`
+    - **Secret**: Paste your SonarQube token
+    - **ID**: `sonar-token`
+    - **Description**: `SonarQube Jenkins Token`
+4. Click **Create**
 
 ---
 
-## CI/CD Pipeline with Jenkins
+## Configure SonarQube in Jenkins
 
-### 1. Install Jenkins & Tools
+### Step 1: Add SonarQube Server
 
-```bash
-# On Jenkins Server (Ubuntu)
-# Install Trivy
-sudo apt-get install trivy -y
+1. Go to **Manage Jenkins** → **System**
+2. Scroll to **SonarQube servers**
+3. Click **Add SonarQube**
+4. Fill in:
+    - **Name**: `SonarQube`
+    - **Server URL**: `http://localhost:9000` (or your server IP)
+    - **Server authentication token**: Select `sonar-token`
+5. Click **Save**
 
-# Install yq
-sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
-sudo chmod +x /usr/bin/yq
+### Step 2: Install SonarQube Scanner Tool
 
-# Install Helm
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+1. Go to **Manage Jenkins** → **Tools**
+2. Scroll to **SonarQube Scanner**
+3. Click **Add SonarQube Scanner**
+4. Fill in:
+    - **Name**: `sonar-scanner`
+    - Check **Install automatically**
+    - **Version**: `Latest`
+5. Click **Save**
 
-# Install Docker
-curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
-sudo usermod -aG docker jenkins
-```
+---
 
-### 2. Create Shared Library (Groovy)
+## Setup SonarQube Webhook
 
-**vars/imagePush.groovy:**
+Webhooks notify Jenkins when analysis completes.
+
+### Step 1: Create Webhook in SonarQube
+
+1. Go to **Administration** (gear icon bottom-left)
+2. Click **Webhooks** under **Configuration**
+3. Click **Create**
+4. Fill in:
+    - **Name**: `jenkins-webhook`
+    - **URL**: `http://<your-jenkins-ip>:8080/sonarqube-webhook/`
+    - **Secret**: Leave empty
+5. Click **Create**
+
+### Step 2: Enable in Jenkins
+
+1. Go to **Manage Jenkins** → **System**
+2. Find **SonarQube Servers**
+3. Check **Enable SonarQube webhook**
+4. Click **Save**
+
+---
+
+# PART 4: CI/CD PIPELINES
+
+## Create CI Pipeline (Build & Test)
+
+### Step 1: Create Pipeline Job in Jenkins
+
+1. Click **New Item**
+2. **Item name**: `fitverse-ci`
+3. Select **Pipeline**
+4. Click **OK**
+
+### Step 2: Configure Pipeline
+
+In the Pipeline section:
+
 ```groovy
-def call(Map config) {
-    sh '''
-        docker build -t ${DOCKER_REGISTRY}/${DOCKER_USER}/${IMAGE_NAME}:${DOCKER_TAG} .
-        docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD} ${DOCKER_REGISTRY}
-        docker push ${DOCKER_REGISTRY}/${DOCKER_USER}/${IMAGE_NAME}:${DOCKER_TAG}
-    '''
-}
-```
+@Library('shared-lib') _
 
-**vars/sonarScan.groovy:**
-```groovy
-def call(Map config) {
-    sh '''
-        sonar-scanner \
-          -Dsonar.projectKey=${PROJECT_KEY} \
-          -Dsonar.sources=. \
-          -Dsonar.host.url=${SONAR_HOST_URL} \
-          -Dsonar.login=${SONAR_TOKEN}
-    '''
-}
-```
-
-**vars/trivyScan.groovy:**
-```groovy
-def call(Map config) {
-    sh '''
-        trivy image --severity HIGH,CRITICAL \
-          ${DOCKER_REGISTRY}/${DOCKER_USER}/${IMAGE_NAME}:${DOCKER_TAG}
-    '''
-}
-```
-
-**vars/updateManifests.groovy:**
-```groovy
-def call(Map config) {
-    sh '''
-        git clone ${GIT_REPO} manifests
-        cd manifests
-        
-        # Update image tag in Helm values
-        yq eval ".${SERVICE_NAME}.image.tag = \"${DOCKER_TAG}\"" -i values.yaml
-        
-        # Commit and push
-        git config user.email "jenkins@fitverse.com"
-        git config user.name "Jenkins"
-        git add .
-        git commit -m "Update ${SERVICE_NAME} to ${DOCKER_TAG}"
-        git push origin main
-    '''
-}
-```
-
-### 3. Jenkins CI Pipeline
-
-**FitVerse-CI Jenkinsfile:**
-```groovy
 pipeline {
     agent any
     
     environment {
-        DOCKER_REGISTRY = 'docker.io'
-        DOCKER_USER = credentials('docker-username')
-        DOCKER_PASSWORD = credentials('docker-password')
-        SONAR_HOST_URL = 'http://sonarqube:9000'
-        SONAR_TOKEN = credentials('sonar-token')
-        PROJECT_KEY = 'fitverse-backend'
-        DOCKER_TAG = "${BUILD_NUMBER}"
-    }
-    
-    parameters {
-        choice(name: 'SERVICE_NAME', choices: ['backend', 'frontend'], description: 'Service to build')
+        JAVA_HOME = "${tool 'Java17'}"
+        MAVEN_HOME = "${tool 'maven-3'}"
+        DOCKER_REGISTRY = "your-dockerhub-username"
+        DOCKER_IMAGE = "${DOCKER_REGISTRY}/fitverse-backend"
+        DOCKER_TAG = "${BUILD_NUMBER}-${GIT_COMMIT.take(7)}"
     }
     
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/rupesh-hub/FitVerse.git'
+                script {
+                    checkoutRepository([
+                        repo_url: 'https://github.com/rupesh-hub/FitVerse.git',
+                        credentials_id: 'git-ssh-cred'
+                    ])
+                }
             }
         }
         
         stage('Build') {
             steps {
-                dir("${params.SERVICE_NAME}") {
-                    sh 'npm install || mvn clean package'
+                sh '''
+                    echo "Building FitVerse Backend..."
+                    cd Backend
+                    mvn clean package -DskipTests
+                '''
+            }
+        }
+        
+        stage('Code Quality - SonarQube') {
+            steps {
+                script {
+                    withSonarQubeEnv('SonarQube') {
+                        sh '''
+                            ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                            -Dsonar.projectKey=fitverse-backend \
+                            -Dsonar.projectName=FitVerse-Backend \
+                            -Dsonar.sources=Backend/src \
+                            -Dsonar.java.binaries=Backend/target/classes \
+                            -Dsonar.exclusions=**/*Test.java,**/test/**
+                        '''
+                    }
                 }
             }
         }
         
-        stage('Code Quality') {
+        stage('Quality Gate') {
             steps {
                 script {
-                    imagePush(
-                        dockerfile: "${params.SERVICE_NAME}/Dockerfile",
-                        imageName: "fitverse-${params.SERVICE_NAME}"
-                    )
+                    timeout(time: 5, unit: 'MINUTES') {
+                        def qualityGate = waitForQualityGate()
+                        if (qualityGate.status != 'OK') {
+                            error "Quality Gate Failed: ${qualityGate.status}"
+                        }
+                    }
                 }
             }
         }
         
-        stage('SonarQube Scan') {
+        stage('Trivy Scan') {
             steps {
-                script {
-                    sonarScan(projectKey: PROJECT_KEY)
-                }
+                sh '''
+                    echo "Scanning for vulnerabilities..."
+                    trivy fs --severity HIGH,CRITICAL Backend/
+                '''
             }
         }
         
-        stage('Build Image') {
+        stage('Build Docker Image') {
             steps {
-                script {
-                    imagePush(
-                        dockerfile: "${params.SERVICE_NAME}/Dockerfile",
-                        imageName: "fitverse-${params.SERVICE_NAME}"
-                    )
-                }
-            }
-        }
-        
-        stage('Security Scan') {
-            steps {
-                script {
-                    trivyScan(
-                        image: "docker.io/${DOCKER_USER}/fitverse-${params.SERVICE_NAME}:${DOCKER_TAG}"
-                    )
-                }
+                sh '''
+                    echo "Building Docker image..."
+                    cd Backend
+                    docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} -t ${DOCKER_IMAGE}:latest .
+                '''
             }
         }
         
         stage('Push to Registry') {
             steps {
-                sh '''
-                    docker push docker.io/${DOCKER_USER}/fitverse-${params.SERVICE_NAME}:${DOCKER_TAG}
-                    docker tag docker.io/${DOCKER_USER}/fitverse-${params.SERVICE_NAME}:${DOCKER_TAG} \
-                              docker.io/${DOCKER_USER}/fitverse-${params.SERVICE_NAME}:latest
-                    docker push docker.io/${DOCKER_USER}/fitverse-${params.SERVICE_NAME}:latest
-                '''
-            }
-        }
-        
-        stage('Trigger CD') {
-            steps {
-                build job: 'FitVerse-CD', parameters: [
-                    string(name: 'SERVICE_NAME', value: "${params.SERVICE_NAME}"),
-                    string(name: 'DOCKER_TAG', value: "${DOCKER_TAG}")
-                ]
-            }
-        }
-    }
-    
-    post {
-        always {
-            cleanWs()
-        }
-        failure {
-            echo "Build failed - check logs"
-        }
-    }
-}
-```
-
----
-
-## ArgoCD GitOps Workflow
-
-### 1. Install ArgoCD
-
-```bash
-# Create namespace
-kubectl create namespace argocd
-
-# Install ArgoCD
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-
-# Access ArgoCD (Change service type to LoadBalancer)
-kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
-
-# Get initial password
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
-```
-
-### 2. Connect Git Repository
-
-1. Open ArgoCD UI: `http://<argocd-loadbalancer>`
-2. Login: `admin` / `<password-from-above>`
-3. Go to **Settings → Repositories → Connect Repo**
-4. Choose **SSH** and add your Git SSH key
-5. Enter repo URL: `git@github.com:rupesh-hub/FitVerse-2026.git`
-
-### 3. Create Backend Application (Helm)
-
-```bash
-kubectl apply -f - <<EOF
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: fitverse-backend
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: 'git@github.com:rupesh-hub/FitVerse-2026.git'
-    targetRevision: main
-    path: helm/                    # Path to Helm chart
-    helm:
-      valueFiles:
-        - values-prod.yaml
-      parameters:
-        - name: backend.image.tag
-          value: 'latest'
-  destination:
-    server: 'https://kubernetes.default.svc'
-    namespace: fitverse-prod
-  syncPolicy:
-    automated:
-      prune: true                # Delete removed resources
-      selfHeal: true             # Revert manual changes
-    syncOptions:
-      - CreateNamespace=true
-EOF
-```
-
-### 4. Create Frontend Application
-
-```bash
-kubectl apply -f - <<EOF
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: fitverse-frontend
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: 'git@github.com:rupesh-hub/FitVerse-2026.git'
-    targetRevision: main
-    path: kubernetes/              # Path to K8s manifests
-  destination:
-    server: 'https://kubernetes.default.svc'
-    namespace: fitverse-prod
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-EOF
-```
-
-### 5. Modified CD Pipeline for ArgoCD
-
-When using ArgoCD, the CD pipeline only needs to update Git:
-
-**FitVerse-CD Jenkinsfile (ArgoCD version):**
-```groovy
-pipeline {
-    agent any
-    
-    parameters {
-        string(name: 'SERVICE_NAME', description: 'Service to deploy')
-        string(name: 'DOCKER_TAG', description: 'Docker image tag')
-    }
-    
-    stages {
-        stage('Update GitOps Manifests') {
-            steps {
                 script {
-                    sh '''
-                        git clone git@github.com:rupesh-hub/FitVerse-2026.git manifests
-                        cd manifests
-                        
-                        # Update Helm values for the service
-                        yq eval ".${SERVICE_NAME}.image.tag = \"${DOCKER_TAG}\"" -i helm/values-prod.yaml
-                        
-                        # Commit and push
-                        git config user.email "jenkins@fitverse.com"
-                        git config user.name "Jenkins CI"
-                        git add helm/values-prod.yaml
-                        git commit -m "Update ${SERVICE_NAME} image to ${DOCKER_TAG}"
-                        git push origin main
-                        
-                        # ArgoCD will detect the change within 3 minutes
-                    '''
+                    withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh '''
+                            echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+                            docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                            docker push ${DOCKER_IMAGE}:latest
+                            docker logout
+                        '''
+                    }
                 }
             }
         }
@@ -624,437 +513,370 @@ pipeline {
     
     post {
         success {
-            echo "Git updated - ArgoCD will sync automatically"
+            echo "✓ Build successful! Image: ${DOCKER_IMAGE}:${DOCKER_TAG}"
+        }
+        failure {
+            echo "✗ Build failed"
         }
     }
 }
 ```
 
-### 6. ArgoCD CLI Commands
+Click **Save**
 
-```bash
-# Install ArgoCD CLI
-curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
+### Step 3: Run CI Pipeline
 
-# Login to ArgoCD
-argocd login <argocd-server> --username admin --password <password>
-
-# List applications
-argocd app list
-
-# Sync application manually
-argocd app sync fitverse-backend
-
-# Get app status
-argocd app get fitverse-backend
-
-# Rollback to previous sync
-argocd app rollback fitverse-backend
-```
+1. Click **Build Now**
+2. Click the build number to see logs
+3. Verify: Docker image pushed to registry
 
 ---
 
-## Scaling & Performance
+## Create CD Pipeline (Deploy to Kubernetes)
 
-### Horizontal Pod Autoscaling (HPA)
+### Step 1: Create Pipeline Job
 
-```bash
-# View HPA status
-kubectl get hpa -n fitverse-prod
+1. Click **New Item**
+2. **Item name**: `fitverse-cd`
+3. Select **Pipeline**
+4. Click **OK**
 
-# Describe HPA
-kubectl describe hpa fitverse-backend-hpa -n fitverse-prod
+### Step 2: Configure Pipeline
 
-# Edit HPA thresholds
-kubectl edit hpa fitverse-backend-hpa -n fitverse-prod
+```groovy
+@Library('shared-lib') _
 
-# Update via Helm
-helm upgrade fitverse ./helm -n fitverse-prod \
-  --reuse-values \
-  --set backend.autoscaling.maxReplicas=15 \
-  --set backend.autoscaling.targetCPUUtilizationPercentage=60
+pipeline {
+    agent any
+    
+    parameters {
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Deploy environment')
+        string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Docker image tag to deploy')
+    }
+    
+    environment {
+        DOCKER_IMAGE = "your-dockerhub-username/fitverse-backend:${IMAGE_TAG}"
+        HELM_CHART = "./helm"
+        K8S_NAMESPACE = "fitverse-${ENVIRONMENT}"
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/rupesh-hub/FitVerse.git',
+                        credentialsId: 'git-ssh-cred'
+                    ]]
+                ])
+            }
+        }
+        
+        stage('Validate Helm Chart') {
+            steps {
+                sh '''
+                    echo "Validating Helm chart..."
+                    helm lint ${HELM_CHART}
+                    helm template fitverse ${HELM_CHART} > /tmp/manifest.yaml
+                    echo "✓ Helm chart valid"
+                '''
+            }
+        }
+        
+        stage('Create Namespace') {
+            steps {
+                sh '''
+                    kubectl create namespace ${K8S_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+                    echo "✓ Namespace ${K8S_NAMESPACE} ready"
+                '''
+            }
+        }
+        
+        stage('Deploy with Helm') {
+            steps {
+                sh '''
+                    echo "Deploying to ${ENVIRONMENT}..."
+                    helm upgrade --install fitverse ${HELM_CHART} \
+                        -n ${K8S_NAMESPACE} \
+                        --values ${HELM_CHART}/values-${ENVIRONMENT}.yaml \
+                        --set backend.image.tag=${IMAGE_TAG} \
+                        --wait \
+                        --timeout=10m
+                '''
+            }
+        }
+        
+        stage('Verify Deployment') {
+            steps {
+                sh '''
+                    echo "Waiting for rollout..."
+                    kubectl rollout status deployment/fitverse-backend -n ${K8S_NAMESPACE} --timeout=5m
+                    kubectl rollout status deployment/fitverse-frontend -n ${K8S_NAMESPACE} --timeout=5m
+                    
+                    echo "✓ Deployment successful!"
+                    kubectl get pods -n ${K8S_NAMESPACE}
+                '''
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo "✓ Deployed to ${ENVIRONMENT} successfully!"
+        }
+        failure {
+            sh '''
+                echo "✗ Deployment failed. Rolling back..."
+                helm rollback fitverse -n ${K8S_NAMESPACE}
+            '''
+        }
+    }
+}
 ```
 
-### Manual Pod Scaling
-
-```bash
-# Scale backend to 5 replicas
-kubectl scale statefulset fitverse-backend --replicas=5 -n fitverse-prod
-
-# Scale frontend to 4 replicas
-kubectl scale deployment fitverse-frontend --replicas=4 -n fitverse-prod
-
-# Check resource usage
-kubectl top pods -n fitverse-prod --sort-by=cpu
-kubectl top pods -n fitverse-prod --sort-by=memory
-```
-
-### Node Scaling (Infrastructure)
-
-```bash
-# Scale cluster (GKE example)
-gcloud container clusters resize fitverse-cluster --num-nodes=5
-
-# Scale with cloud provider CLI or update Terraform:
-# terraform apply
-```
+Click **Save**
 
 ---
 
-## Upgrades & Rollbacks
+# PART 5: KUBERNETES DEPLOYMENT
 
-### Pre-Upgrade Checklist
+## Prerequisites
 
 ```bash
-# 1. Backup database
-kubectl exec fitverse-mysql-0 -n fitverse-prod -- \
-  mysqldump -uroot -p$MYSQL_ROOT_PASSWORD fitverse > backup-$(date +%s).sql
+# Install Helm
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-# 2. Check current status
-helm status fitverse -n fitverse-prod
+# Install kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
-# 3. Get current values
-helm get values fitverse -n fitverse-prod > current-values.yaml
-
-# 4. View release history
-helm history fitverse -n fitverse-prod
+# Verify
+helm version
+kubectl version --client
 ```
 
-### Perform Upgrade
+## Quick Helm Deployment
 
 ```bash
-# Upgrade with new image
-helm upgrade fitverse ./helm -n fitverse-prod \
-  --reuse-values \
-  --set backend.image.tag=2.0.0 \
-  --wait --timeout=5m
+# Create namespace
+kubectl create namespace fitverse-prod
 
-# Upgrade entire chart
-helm upgrade fitverse ./helm -n fitverse-prod \
-  --values values-prod.yaml \
-  --wait --timeout=10m \
-  --atomic  # Auto-rollback on failure
+# Deploy
+helm install fitverse ./helm \
+    -n fitverse-prod \
+    --values values-prod.yaml \
+    --wait --timeout=10m
 
-# Monitor rolling update
-kubectl rollout status statefulset fitverse-backend -n fitverse-prod -w
-```
-
-### Rollback
-
-```bash
-# Rollback to previous revision
-helm rollback fitverse -n fitverse-prod
-
-# Rollback to specific revision
-helm rollback fitverse 2 -n fitverse-prod
-
-# Verify rollback
+# Verify
 helm status fitverse -n fitverse-prod
-kubectl get pods -n fitverse-prod
-```
-
----
-
-## Monitoring & Debugging
-
-### Status & Logs
-
-```bash
-# Check release status
-helm status fitverse -n fitverse-prod
-
-# List all resources
 kubectl get all -n fitverse-prod
-
-# View pod logs (last 100 lines, follow)
-kubectl logs -n fitverse-prod -l app=fitverse,component=backend -f --tail=100
-
-# Get logs from crashed pod
-kubectl logs pod/fitverse-backend-0 -n fitverse-prod --previous
-
-# Stream logs from all containers
-kubectl logs pod/fitverse-backend-0 -n fitverse-prod --all-containers=true
 ```
 
-### Debugging
+## Multi-Environment Deployments
+
+### Development
 
 ```bash
-# Describe pod for events
-kubectl describe pod fitverse-backend-0 -n fitverse-prod
-
-# Execute into pod
-kubectl exec -it fitverse-backend-0 -n fitverse-prod -- /bin/sh
-
-# Network diagnostics
-kubectl run -it --rm debug --image=busybox --restart=Never -- \
-  nslookup fitverse-mysql.fitverse-prod.svc.cluster.local
-
-# Test connectivity to backend
-kubectl run -it --rm debug --image=curlimages/curl --restart=Never -- \
-  curl http://fitverse-backend:8181/health
+kubectl create namespace fitverse-dev
+helm install fitverse ./helm -n fitverse-dev \
+    --values values-dev.yaml \
+    --set backend.replicas=1 \
+    --set frontend.replicas=1
 ```
 
-### Helm Debugging
+### Staging
 
 ```bash
-# Dry-run to see what would deploy
-helm template fitverse ./helm -n fitverse-prod --values values-prod.yaml
+kubectl create namespace fitverse-staging
+helm install fitverse ./helm -n fitverse-staging \
+    --values values-staging.yaml \
+    --set backend.replicas=2 \
+    --set frontend.replicas=2
+```
 
-# Install in debug mode
-helm install fitverse ./helm -n fitverse-prod --debug --dry-run
+### Production
+
+```bash
+kubectl create namespace fitverse-prod
+helm install fitverse ./helm -n fitverse-prod \
+    --values values-prod.yaml \
+    --set backend.replicas=3 \
+    --set frontend.replicas=3
 ```
 
 ---
 
-## Disaster Recovery
-
-### Database Backup & Restore
-
-**Automated Backup:**
-```bash
-helm upgrade fitverse ./helm -n fitverse-prod \
-  --reuse-values \
-  --set mysql.backup.enabled=true \
-  --set mysql.backup.schedule="0 2 * * *"
-```
-
-**Manual Backup:**
-```bash
-# Backup to local file
-kubectl exec fitverse-mysql-0 -n fitverse-prod -- \
-  mysqldump -uroot -p$MYSQL_ROOT_PASSWORD fitverse > backup-$(date +%Y%m%d).sql
-
-# Backup to cloud storage (GCS)
-kubectl exec fitverse-mysql-0 -n fitverse-prod -- \
-  mysqldump -uroot -p$MYSQL_ROOT_PASSWORD fitverse | \
-  gsutil cp - gs://fitverse-backups/backup-$(date +%s).sql
-```
-
-**Restore from Backup:**
-```bash
-# Restore from local backup
-kubectl exec -i fitverse-mysql-0 -n fitverse-prod -- \
-  mysql -uroot -p$MYSQL_ROOT_PASSWORD < backup-20260109.sql
-
-# Restore from cloud storage
-gsutil cat gs://fitverse-backups/backup-1234567890.sql | \
-  kubectl exec -i fitverse-mysql-0 -n fitverse-prod -- \
-  mysql -uroot -p$MYSQL_ROOT_PASSWORD
-```
-
-### Pod Recovery
+## Helm Commands Cheatsheet
 
 ```bash
-# Restart a single pod
-kubectl delete pod fitverse-backend-0 -n fitverse-prod
+# List releases
+helm list -n fitverse-prod
 
-# Restart all backend pods
-kubectl delete pods -l app=fitverse,component=backend -n fitverse-prod
+# Get deployment status
+helm status fitverse -n fitverse-prod
 
-# Check PersistentVolume status
-kubectl get pv,pvc -n fitverse-prod
+# Upgrade deployment
+helm upgrade fitverse ./helm -n fitverse-prod -f values-prod.yaml
 
-# Describe PVC for errors
-kubectl describe pvc fitverse-mysql-pvc-0 -n fitverse-prod
-```
-
----
-
-## Security Operations
-
-### Update Secrets
-
-```bash
-# Update database password (recommended: use Sealed Secrets)
-kubectl create secret generic fitverse-secrets \
-  --from-literal=MYSQL_ROOT_PASSWORD=new-secure-password \
-  -n fitverse-prod --dry-run=client -o yaml | kubectl apply -f -
-
-# Verify secrets
-kubectl get secrets -n fitverse-prod
-kubectl describe secret fitverse-mysql-secret -n fitverse-prod
-```
-
-### RBAC Management
-
-```bash
-# Check RBAC bindings
-kubectl get rolebindings,clusterrolebindings -n fitverse-prod
-
-# Create ServiceAccount with limited permissions
-kubectl create serviceaccount fitverse-external -n fitverse-prod
-kubectl create rolebinding fitverse-external-rb \
-  --clusterrole=view \
-  --serviceaccount=fitverse-prod:fitverse-external
-
-# Get token for external access
-kubectl get secret -n fitverse-prod \
-  $(kubectl get secret -n fitverse-prod | grep fitverse-external-token | awk '{print $1}') \
-  -o jsonpath='{.data.token}' | base64 -d
-```
-
-### Certificate Management
-
-```bash
-# Check certificate status
-kubectl get certificate -n fitverse-prod
-
-# View certificate details
-kubectl get secret fitverse-tls -n fitverse-prod -o jsonpath='{.data.tls\.crt}' | \
-  base64 -d | openssl x509 -text -noout
-
-# Renew certificate
-kubectl delete certificate fitverse -n fitverse-prod
-# Cert-manager will auto-recreate
-```
-
----
-
-## Troubleshooting
-
-### Pods in CrashLoopBackOff
-
-```bash
-# Check logs
-kubectl logs fitverse-backend-0 -n fitverse-prod --previous
-
-# Describe pod
-kubectl describe pod fitverse-backend-0 -n fitverse-prod
-
-# Fix image tag
-helm upgrade fitverse ./helm -n fitverse-prod \
-  --reuse-values \
-  --set backend.image.tag=1.0.1
-```
-
-### Database Connection Failed
-
-```bash
-# Check MySQL pod
-kubectl get pods -n fitverse-prod -l component=mysql
-
-# Test connection
-kubectl run -it --rm debug --image=mysql:8.0 --restart=Never -- \
-  mysql -h fitverse-mysql -uroot -p$MYSQL_ROOT_PASSWORD -e "SELECT 1"
-
-# Check volume
-kubectl exec fitverse-mysql-0 -n fitverse-prod -- ls -la /var/lib/mysql
-```
-
-### Ingress Not Routing Traffic
-
-```bash
-# Verify ingress
-kubectl get ingress -n fitverse-prod -o yaml
-
-# Check backend service endpoints
-kubectl get endpoints fitverse-backend -n fitverse-prod
-kubectl get endpoints fitverse-frontend -n fitverse-prod
-
-# Verify DNS
-nslookup fitverse.example.com
-
-# Check ingress controller logs
-kubectl logs -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx
-```
-
-### PVC Stuck in Pending
-
-```bash
-# Check PVC status
-kubectl describe pvc fitverse-mysql-pvc-0 -n fitverse-prod
-
-# Check available StorageClass
-kubectl get storageclass
-
-# Create PersistentVolume if needed
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: fitverse-pv
-spec:
-  capacity:
-    storage: 100Gi
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: fast-ssd
-  hostPath:
-    path: /mnt/data
-EOF
-```
-
----
-
-## Cheat Sheet: Quick Commands
-
-```bash
-# DEPLOYMENT
-helm install fitverse ./helm -n fitverse-prod --create-namespace --values values-prod.yaml
-helm upgrade fitverse ./helm -n fitverse-prod --reuse-values --set backend.image.tag=2.0.0 --wait
+# Rollback to previous version
 helm rollback fitverse -n fitverse-prod
+
+# Delete deployment
 helm uninstall fitverse -n fitverse-prod
 
-# STATUS & MONITORING
-helm status fitverse -n fitverse-prod
-kubectl get all -n fitverse-prod
-kubectl logs -l app=fitverse -n fitverse-prod -f
-kubectl top pods -n fitverse-prod
-
-# SCALING
-kubectl scale statefulset fitverse-backend --replicas=5 -n fitverse-prod
-kubectl get hpa -n fitverse-prod
-
-# DEBUGGING
-kubectl describe pod fitverse-backend-0 -n fitverse-prod
-kubectl exec -it fitverse-backend-0 -n fitverse-prod -- /bin/sh
-kubectl port-forward svc/fitverse-backend 8181:8181 -n fitverse-prod
-
-# BACKUP & RESTORE
-kubectl exec fitverse-mysql-0 -n fitverse-prod -- mysqldump -uroot -p$MYSQL_ROOT_PASSWORD fitverse > backup.sql
-kubectl exec -i fitverse-mysql-0 -n fitverse-prod -- mysql -uroot -p$MYSQL_ROOT_PASSWORD < backup.sql
-
-# ARGOCD
-argocd app list
-argocd app sync fitverse-backend
-argocd app rollback fitverse-backend
+# View generated manifests
+helm template fitverse ./helm -f values-prod.yaml
 ```
 
 ---
 
-## Summary: Your Deployment Architecture
+# PART 6: TESTING & TROUBLESHOOTING
 
-```
-┌─────────────────────────────────────────────────┐
-│        Git Repository (GitHub/GitLab)           │
-│  (Contains helm/, values files, manifests)      │
-└────────────────┬────────────────────────────────┘
-                 │
-       ┌─────────┴─────────┐
-       │                   │
-    ┌──▼──┐            ┌──▼──────┐
-    │     │            │ ArgoCD  │
-    │ CI  │            │ (Pulls) │
-    │     │            └────┬────┘
-    └──┬──┘                 │
-       │ (Builds & Pushes)  │
-       │ Docker Image       │
-    ┌──▼──────────┐         │
-    │ DockerHub   │         │
-    │             │         │
-    └──┬──────────┘    ┌────▼─────────┐
-       │                │ Kubernetes   │
-       │                │ (fitverse)   │
-       └────────────────┘ Cluster      │
-            (Pulls)       (Runs)       │
-                         └─────────────┘
+## Test CI Pipeline
+
+```bash
+# Trigger manually
+# Jenkins UI → fitverse-ci → Build Now
+
+# Check logs
+# Click build number → Console Output
+
+# Verify Docker image
+docker images | grep fitverse-backend
 ```
 
-**Key Points:**
-- Jenkins CI: Builds code → Tests → Scans → Pushes image to Docker Registry
-- Jenkins CD OR ArgoCD: Updates manifests in Git
-- ArgoCD pulls from Git every 3 minutes and deploys automatically
-- Or use kubectl/helm to manually deploy from manifests
+## Test CD Pipeline
 
-Choose GitOps (ArgoCD) for automatic sync, or traditional Jenkins CD for manual control!
+```bash
+# Trigger with parameters
+# Jenkins UI → fitverse-cd → Build with Parameters
+# Select: ENVIRONMENT=dev, IMAGE_TAG=latest
+
+# Verify Kubernetes deployment
+kubectl get pods -n fitverse-dev
+kubectl logs -f deployment/fitverse-backend -n fitverse-dev
+```
+
+## Test SonarQube Integration
+
+```bash
+# Manual analysis
+cd /path/to/project
+sonar-scanner \
+    -Dsonar.projectKey=fitverse-backend \
+    -Dsonar.sources=src \
+    -Dsonar.host.url=http://localhost:9000 \
+    -Dsonar.login=squ_your_token_here
+
+# Check SonarQube dashboard
+# Browser: http://localhost:9000/dashboard?id=fitverse-backend
+```
+
+## Common Issues & Solutions
+
+| Issue | Solution |
+|-------|----------|
+| **Docker build fails** | Check Dockerfile path, ensure Docker daemon running (`sudo systemctl status docker`) |
+| **Kubernetes deployment fails** | Check namespace exists, image pull errors, sufficient resources (`kubectl describe pod <pod-name> -n <namespace>`) |
+| **SonarQube webhook not received** | Verify webhook URL in SonarQube, check Jenkins logs (`tail -f /var/log/jenkins/jenkins.log`) |
+| **Quality gate blocks build** | Check SonarQube dashboard for issues, lower thresholds if needed |
+| **Helm rollout stuck** | Check pod logs (`kubectl logs -f <pod-name> -n <namespace>`), increase timeout |
+| **Permission denied errors** | Ensure Jenkins user has sudo privileges or docker group access |
+
+---
+
+# REFERENCE: COMMANDS & CHECKLISTS
+
+## Quick Commands
+
+```bash
+# Jenkins status
+sudo systemctl status jenkins
+sudo systemctl restart jenkins
+
+# SonarQube status (Docker)
+docker ps | grep sonarqube
+docker logs sonarqube
+
+# Kubernetes deployments
+kubectl get deployments -n fitverse-prod
+kubectl describe deployment fitverse-backend -n fitverse-prod
+kubectl logs -f deployment/fitverse-backend -n fitverse-prod
+
+# Helm status
+helm list
+helm status fitverse -n fitverse-prod
+
+# Rollback deployment
+helm rollback fitverse 1 -n fitverse-prod
+```
+
+## Pre-Deployment Checklist
+
+- [ ] Jenkins running and accessible
+- [ ] All plugins installed and enabled
+- [ ] Java17 and Maven3 tools configured
+- [ ] Git SSH credentials added
+- [ ] Docker credentials added
+- [ ] Shared library configured
+- [ ] SonarQube running
+- [ ] SonarQube token created
+- [ ] SonarQube webhook configured
+- [ ] CI pipeline tested successfully
+- [ ] Docker images pushed to registry
+- [ ] Kubernetes cluster accessible
+- [ ] Helm chart validated
+- [ ] values-dev.yaml, values-staging.yaml, values-prod.yaml created
+- [ ] CD pipeline tested in dev environment
+
+## Production Safety Checklist
+
+- [ ] All images scanned with Trivy
+- [ ] SonarQube quality gate passing
+- [ ] Code review completed
+- [ ] Database backup before deployment
+- [ ] Monitoring and alerting configured
+- [ ] Rollback plan documented
+- [ ] Team notification of deployment
+
+---
+
+## Troubleshooting Commands
+
+```bash
+# Check Jenkins connectivity to SonarQube
+curl -u admin:password http://localhost:9000/api/system/status
+
+# Check Jenkins connectivity to Docker Registry
+docker pull your-registry/image:tag
+
+# Check Jenkins connectivity to Kubernetes
+kubectl auth can-i create deployments --as=system:serviceaccount:jenkins:default
+
+# View Jenkins logs
+tail -f /var/log/jenkins/jenkins.log
+tail -f /var/log/syslog | grep jenkins
+
+# View SonarQube logs (Docker)
+docker logs -f sonarqube
+
+# View Kubernetes deployment logs
+kubectl logs -f deployment/fitverse-backend -n fitverse-prod
+kubectl describe pod <pod-name> -n fitverse-prod
+```
+
+---
+
+## Getting Help
+
+- Jenkins logs: `/var/log/jenkins/jenkins.log`
+- SonarQube logs: `docker logs sonarqube` or `/opt/sonarqube/logs/sonar.log`
+- Kubernetes events: `kubectl describe node`, `kubectl get events -n fitverse-prod`
+- GitHub Issues: Check repository issues for similar problems
+- Documentation: jenkins.io, sonarqube.com, kubernetes.io/docs
+
+---
+
+**You're now ready for production CI/CD! 🚀**
