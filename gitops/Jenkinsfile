@@ -42,34 +42,36 @@ pipeline {
 
         stage('Deploy: Helm (Kubernetes)') {
             steps {
-                withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG_FILE')]) {
-                    script {
-                        echo "Deploying ${params.SERVICE_NAME}:${params.DOCKER_TAG} to Namespace: ${env.TARGET_NS}..."
+                                    withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG_FILE')]) {
+                                        script {
+                                            echo "Deploying ${params.SERVICE_NAME}:${params.DOCKER_TAG} to Namespace: ${env.TARGET_NS}..."
 
-                        sh """#!/bin/bash
-                            # 1. Clean up unmanaged namespace if it exists (using POSIX [ or /bin/bash)
-                            if kubectl --kubeconfig $KUBECONFIG_FILE get namespace ${env.TARGET_NS} >/dev/null 2>&1; then
-                                MANAGED_BY=\$(kubectl --kubeconfig $KUBECONFIG_FILE get namespace ${env.TARGET_NS} -o jsonpath='{.metadata.labels.app\\.kubernetes\\.io/managed-by}' || echo "none")
-                                if [ "\$MANAGED_BY" != "Helm" ]; then
-                                    echo "Found unmanaged namespace. Deleting for clean Helm install..."
-                                    kubectl --kubeconfig $KUBECONFIG_FILE delete namespace ${env.TARGET_NS} --wait=true
-                                fi
-                            fi
+                                            sh """#!/bin/bash
+                                                # 1. Check if namespace exists and is managed by Helm correctly
+                                                if kubectl --kubeconfig \$KUBECONFIG_FILE get namespace ${env.TARGET_NS} >/dev/null 2>&1; then
+                                                    MANAGED_BY=\$(kubectl --kubeconfig \$KUBECONFIG_FILE get namespace ${env.TARGET_NS} -o jsonpath='{.metadata.labels.app\\.kubernetes\\.io/managed-by}' || echo "none")
 
-                            # 2. Helm Deployment
-                            # Ensure namespace.yaml is NOT in your ./helm/templates folder
-                            helm upgrade --install fitverse-${params.SERVICE_NAME} ./helm \
-                                --namespace ${env.TARGET_NS} \
-                                --create-namespace \
-                                --set ${params.SERVICE_NAME}.image.tag=${params.DOCKER_TAG} \
-                                --kubeconfig \$KUBECONFIG_FILE \
-                                --rollback-on-failure \
-                                --timeout 5m
-                        """
-                    }
-                }
-            }
-        }
+                                                    # If it's a legacy namespace not created by Helm, we clean it
+                                                    if [ "\$MANAGED_BY" != "Helm" ]; then
+                                                        echo "Found unmanaged namespace. Deleting for clean Helm install..."
+                                                        kubectl --kubeconfig \$KUBECONFIG_FILE delete namespace ${env.TARGET_NS} --wait=true
+                                                    fi
+                                                fi
+
+                                                # 2. Helm Deployment
+                                                # Note: Ensure you removed namespace.yaml from your helm templates!
+                                                helm upgrade --install fitverse-${params.SERVICE_NAME} ./helm \
+                                                    --namespace ${env.TARGET_NS} \
+                                                    --create-namespace \
+                                                    --set ${params.SERVICE_NAME}.image.tag=${params.DOCKER_TAG} \
+                                                    --kubeconfig \$KUBECONFIG_FILE \
+                                                    --rollback-on-failure \
+                                                    --timeout 5m
+                                            """
+                                        }
+                                    }
+                                }
+                            }
 
         stage('Verify Deployment') {
             steps {
