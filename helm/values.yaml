@@ -47,7 +47,7 @@ backend:
   image:
     repository: rupesh1997/fitverse-backend
     pullPolicy: IfNotPresent
-    tag: "latest"
+    tag: "1.0.1"
   service:
     type: ClusterIP
     port: 8181
@@ -72,7 +72,7 @@ frontend:
   image:
     repository: rupesh1997/fitverse-frontend
     pullPolicy: IfNotPresent
-    tag: "latest"
+    tag: "1.0.0"
   service:
     type: ClusterIP
     port: 4200
