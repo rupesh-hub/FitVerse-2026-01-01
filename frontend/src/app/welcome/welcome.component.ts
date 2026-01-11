@@ -7,7 +7,7 @@ import {WelcomeService} from './welcome.service';
   imports: [CommonModule],
   standalone: true,
   template: `
-    <p class="font-serif font-semibold text-cyan-700 flex justify-center items-center">
+    <p class="font-serif font-bold text-indigo-600 flex justify-center items-center text-xs">
       {{ message }}
     </p>
   `,

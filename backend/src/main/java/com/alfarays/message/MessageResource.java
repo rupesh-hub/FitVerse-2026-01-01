@@ -15,7 +15,7 @@ public class MessageResource {
     public ResponseEntity<MessageResponse> message() {
         return ResponseEntity.ok(
                 MessageResponse.builder()
-                        .content("Welcome to our very first genuine FitVerse products.")
+                        .content("Introducing the FitVerse debut. Our first line of genuine gear is officially live and ready to power your next move. Welcome to the future of your fitness.")
                         .build()
         );
     }
