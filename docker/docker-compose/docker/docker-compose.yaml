@@ -1,5 +1,4 @@
 services:
-
   mysql:
     env_file:
       - ../../../.env
@@ -22,11 +21,10 @@ services:
     extends:
       file: common-config.yaml
       service: network-configuration
-
   fitverse-backend:
     env_file:
       - ../../../.env
-    image: "rupesh1997/fitverse-backend:1.0.1"
+    image: "rupesh1997/fitverse-backend:latest"
     container_name: fitverse-backend
     depends_on:
       mysql:
@@ -44,9 +42,8 @@ services:
     extends:
       file: common-config.yaml
       service: network-configuration
-
   fitverse-frontend:
-    image: "rupesh1997/fitverse-frontend:1.0.0"
+    image: "rupesh1997/fitverse-frontend:latest"
     container_name: fitverse-frontend
     depends_on:
       fitverse-backend:
@@ -56,7 +53,6 @@ services:
     extends:
       file: common-config.yaml
       service: network-configuration
-
 networks:
   fitverse-network:
     driver: bridge
