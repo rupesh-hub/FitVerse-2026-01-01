@@ -6,6 +6,7 @@ pipeline {
     tools {
         jdk 'Java17'
         maven 'maven-3'
+        nodejs 'node-20'
     }
 
     /*parameters {
@@ -66,11 +67,13 @@ pipeline {
                     steps {
                         dir("${env.FE_PATH}") {
                             script {
-                                npmExecute('install', ".")
-                                /*if (params.RUN_SECURITY_SCANS) { */
-                                    // npmExecute('audit --audit-level=high', '.')
-                                    trivyFsScan(".")
-                               /* } */
+                               nodejs('node-20') {
+                                    npmExecute('install', ".")
+                                    /*if (params.RUN_SECURITY_SCANS) { */
+                                        // npmExecute('audit --audit-level=high', '.')
+                                        trivyFsScan(".")
+                                    /* } */
+                               }
                             }
                         }
                     }
