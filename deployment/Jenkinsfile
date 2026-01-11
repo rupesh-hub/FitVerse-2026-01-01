@@ -6,17 +6,12 @@ pipeline {
     tools {
         jdk 'Java17'
         maven 'maven-3'
-        nodejs 'node-20'
     }
-
-    /*parameters {
-        booleanParam(name: 'RUN_SECURITY_SCANS', defaultValue: true, description: 'Run Trivy and Sonar scans?')
-    }*/
 
     environment {
         GIT_URL                   = "https://github.com/rupesh-hub/FitVerse-2026-01-01.git"
         GIT_BRANCH                = "main"
-        DOCKERHUB_CRED_ID         = "dockerhub" // The ID of your Jenkins Docker credentials
+        DOCKERHUB_CRED_ID         = "dockerhub" // The ID of Jenkins Docker credentials
 
         // Backend Config
         BE_PATH                   = "backend"
@@ -55,25 +50,19 @@ pipeline {
                 stage('Backend Build') {
                     steps {
                         script {
-                            mavenExecute('clean package', env.BE_PATH)
-                            /*if (params.RUN_SECURITY_SCANS) { */
-                            trivyFsScan(env.BE_PATH)
-                            /*}*/
+                            dir("${env.BE_PATH}") {
+                                mavenExecute('clean package', ".")
+                                trivyFsScan(".")
+                            }
                         }
                     }
                 }
 
-                stage('Frontend Build') {
+                stage('Frontend Build & Scan') {
                     steps {
                         dir("${env.FE_PATH}") {
                             script {
-                               nodejs('node-20') {
-                                    npmExecute('install', ".")
-                                    /*if (params.RUN_SECURITY_SCANS) { */
-                                        // npmExecute('audit --audit-level=high', '.')
-                                        trivyFsScan(".")
-                                    /* } */
-                               }
+                                trivyFsScan(".")
                             }
                         }
                     }
@@ -85,32 +74,36 @@ pipeline {
             parallel {
                 stage('Backend Image') {
                     steps {
-                        script {
-                            def tags = ["latest", env.BE_VERSION]
-                            def buildArgs = ['PROJECT_VERSION': env.BE_VERSION, 'ACTIVE_PROFILE': env.ACTIVE_PROFILE]
+                        dir("${env.BE_PATH}"){
+                            script {
+                                def tags = ["latest", env.BE_VERSION]
+                                def buildArgs = ['PROJECT_VERSION': env.BE_VERSION, 'ACTIVE_PROFILE': env.ACTIVE_PROFILE]
 
-                            dockerBuild(env.BE_REPO, tags, buildArgs, env.BE_DOCKERFILE)
+                                dockerBuild(env.BE_REPO, tags, buildArgs, "../${env.BE_DOCKERFILE}")
 
-                            if (params.RUN_SECURITY_SCANS) {
-                                trivyImageScan(["${env.BE_REPO}:${env.BE_VERSION}"])
+                                if (params.RUN_SECURITY_SCANS) {
+                                    trivyImageScan(["${env.BE_REPO}:${env.BE_VERSION}"])
+                                }
+                                pushImages(["${env.BE_REPO}:latest", "${env.BE_REPO}:${env.BE_VERSION}"], env.DOCKERHUB_CRED_ID)
                             }
-                            pushImages(["${env.BE_REPO}:latest", "${env.BE_REPO}:${env.BE_VERSION}"], env.DOCKERHUB_CRED_ID)
                         }
                     }
                 }
 
                 stage('Frontend Image') {
                     steps {
-                        script {
-                            def tags = ["latest", env.FE_VERSION]
-                            def buildArgs = ['PROJECT_VERSION': env.FE_VERSION, 'CONFIGURATION': 'production']
+                        dir("${env.FE_PATH}"){
+                            script {
+                                def tags = ["latest", env.FE_VERSION]
+                                def buildArgs = ['PROJECT_VERSION': env.FE_VERSION, 'CONFIGURATION': 'production']
 
-                            dockerBuild(env.FE_REPO, tags, buildArgs, env.FE_DOCKERFILE)
+                                dockerBuild(env.FE_REPO, tags, buildArgs, "../${env.FE_DOCKERFILE}")
 
-                            if (params.RUN_SECURITY_SCANS) {
-                                trivyImageScan(["${env.FE_REPO}:${env.FE_VERSION}"])
+                                if (params.RUN_SECURITY_SCANS) {
+                                    trivyImageScan(["${env.FE_REPO}:${env.FE_VERSION}"])
+                                }
+                                pushImages(["${env.FE_REPO}:latest", "${env.FE_REPO}:${env.FE_VERSION}"], env.DOCKERHUB_CRED_ID)
                             }
-                            pushImages(["${env.FE_REPO}:latest", "${env.FE_REPO}:${env.FE_VERSION}"], env.DOCKERHUB_CRED_ID)
                         }
                     }
                 }

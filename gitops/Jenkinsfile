@@ -95,7 +95,10 @@ pipeline {
                 withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG_FILE')]) {
                     sh """
                         echo "--- Current Status in ${env.TARGET_NS} ---"
-                        kubectl --kubeconfig \$KUBECONFIG_FILE get pods,svc -n ${env.TARGET_NS}
+                        # This lists the pods so you can see them in the Jenkins log
+                        kubectl --kubeconfig \$KUBECONFIG_FILE get pods -n ${env.TARGET_NS}
+
+                        # FIX: Match the actual deployment names (fitverse- prefix)
                         kubectl --kubeconfig \$KUBECONFIG_FILE rollout status deployment/fitverse-backend -n ${env.TARGET_NS}
                         kubectl --kubeconfig \$KUBECONFIG_FILE rollout status deployment/fitverse-frontend -n ${env.TARGET_NS}
                     """
