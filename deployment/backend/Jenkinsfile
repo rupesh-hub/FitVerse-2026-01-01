@@ -4,18 +4,30 @@ pipeline {
     agent any
 
     tools {
-       jdk 'Java17'
-       maven 'maven-3'
+        jdk 'Java17'
+        maven 'maven-3'
     }
 
+    /*parameters {
+        booleanParam(name: 'RUN_SECURITY_SCANS', defaultValue: true, description: 'Run Trivy and Sonar scans?')
+    }*/
+
     environment {
-        GIT_URL          = "https://github.com/rupesh-hub/FitVerse-2026-01-01.git"
-        GIT_BRANCH       = "main"
-        PROJECT_PATH     = "backend"
-        DOCKERFILE_PATH  = "../docker/backend/Dockerfile"
-        DOCKERHUB_REPO   = "rupesh1997/fitverse-backend"
-        SONAR_API_ENV    = "SonarQube"
-        ACTIVE_PROFILE   = "production"
+        GIT_URL                   = "https://github.com/rupesh-hub/FitVerse-2026-01-01.git"
+        GIT_BRANCH                = "main"
+        DOCKERHUB_CRED_ID         = "dockerhub" // The ID of your Jenkins Docker credentials
+
+        // Backend Config
+        BE_PATH                   = "backend"
+        BE_DOCKERFILE             = "docker/backend/Dockerfile"
+        BE_REPO                   = "rupesh1997/fitverse-backend"
+
+        // Frontend Config
+        FE_PATH                   = "frontend"
+        FE_DOCKERFILE             = "docker/frontend/Dockerfile"
+        FE_REPO                   = "rupesh1997/fitverse-frontend"
+
+        ACTIVE_PROFILE            = "production"
     }
 
     stages {
@@ -25,89 +37,101 @@ pipeline {
             }
         }
 
-        stage('Checkout & Version Extraction') {
+        stage('Checkout & Versioning') {
             steps {
                 script {
                     checkoutRepository(env.GIT_URL, env.GIT_BRANCH)
-                    env.APP_VERSION = getVersion(env.PROJECT_PATH)
-                    echo "Extracted Version: ${env.APP_VERSION}"
+                    // Extract versions for both
+                    env.BE_VERSION = getVersion(env.BE_PATH)
+                    env.FE_VERSION = getVersion(env.FE_PATH)
+                    echo "Backend: ${env.BE_VERSION} | Frontend: ${env.FE_VERSION}"
                 }
             }
         }
 
-        stage('Java: Build & Package') {
-            steps {
-                script {
-                    mavenExecute('clean package', env.PROJECT_PATH)
+        stage('Parallel Build & Scan') {
+            parallel {
+                stage('Backend Build') {
+                    steps {
+                        script {
+                            mavenExecute('clean package', env.BE_PATH)
+                            /*if (params.RUN_SECURITY_SCANS) { */
+                            trivyFsScan(env.BE_PATH)
+                            /*}*/
+                        }
+                    }
                 }
-            }
-        }
 
-        stage('Security Scanning') {
-            steps {
-                script {
-                    // Since you only have one scan now, no need for 'parallel'
-                    // This prevents syntax errors and potential hanging
-                    trivyFsScan(env.PROJECT_PATH)
-                }
-            }
-        }
-
-        stage("Docker: Build Image") {
-            steps {
-                dir("${env.PROJECT_PATH}") {
-                    script {
-                        def tags = ["latest", env.APP_VERSION]
-                        def buildParams = [
-                            'PROJECT_VERSION': env.APP_VERSION,
-                            'ACTIVE_PROFILE' : env.ACTIVE_PROFILE
-                        ]
-                        dockerBuild(env.DOCKERHUB_REPO, tags, buildParams, env.DOCKERFILE_PATH)
+                stage('Frontend Build') {
+                    steps {
+                        dir("${env.FE_PATH}") {
+                            script {
+                                npmExecute('install', ".")
+                                /*if (params.RUN_SECURITY_SCANS) { */
+                                    // npmExecute('audit --audit-level=high', '.')
+                                    trivyFsScan(".")
+                               /* } */
+                            }
+                        }
                     }
                 }
             }
         }
 
-        stage('Trivy: Image Scan') {
-            steps {
-                script {
-                    trivyImageScan(["${env.DOCKERHUB_REPO}:${env.APP_VERSION}"])
-                }
-            }
-        }
+        stage('Docker Productionization') {
+            parallel {
+                stage('Backend Image') {
+                    steps {
+                        script {
+                            def tags = ["latest", env.BE_VERSION]
+                            def buildArgs = ['PROJECT_VERSION': env.BE_VERSION, 'ACTIVE_PROFILE': env.ACTIVE_PROFILE]
 
-        stage("Docker: Push") {
-            steps {
-               script {
-                  def pushList = ["${env.DOCKERHUB_REPO}:latest", "${env.DOCKERHUB_REPO}:${env.APP_VERSION}"]
-                  pushImages(pushList, "dockerhub")
-               }
+                            dockerBuild(env.BE_REPO, tags, buildArgs, env.BE_DOCKERFILE)
+
+                            if (params.RUN_SECURITY_SCANS) {
+                                trivyImageScan(["${env.BE_REPO}:${env.BE_VERSION}"])
+                            }
+                            pushImages(["${env.BE_REPO}:latest", "${env.BE_REPO}:${env.BE_VERSION}"], env.DOCKERHUB_CRED_ID)
+                        }
+                    }
+                }
+
+                stage('Frontend Image') {
+                    steps {
+                        script {
+                            def tags = ["latest", env.FE_VERSION]
+                            def buildArgs = ['PROJECT_VERSION': env.FE_VERSION, 'CONFIGURATION': 'production']
+
+                            dockerBuild(env.FE_REPO, tags, buildArgs, env.FE_DOCKERFILE)
+
+                            if (params.RUN_SECURITY_SCANS) {
+                                trivyImageScan(["${env.FE_REPO}:${env.FE_VERSION}"])
+                            }
+                            pushImages(["${env.FE_REPO}:latest", "${env.FE_REPO}:${env.FE_VERSION}"], env.DOCKERHUB_CRED_ID)
+                        }
+                    }
+                }
             }
         }
     }
 
     post {
-         success {
+        success {
             script {
-                archiveArtifacts artifacts: "${env.PROJECT_PATH}/target/*.jar", allowEmptyArchive: true
-                // Note: dependency-check-report will only exist if you run that scan
-                archiveArtifacts artifacts: '**/dependency-check-report.xml', allowEmptyArchive: true
-
                 notify('SUCCESS', 'dulalrupesh77@gmail.com')
 
-                // Downstream CD Job (Ensure this job name exists in Jenkins)
-                catchError(buildStepFailure: 'FAILURE', stageResult: 'FAILURE') {
-                    build job: "FitVerse-CD", parameters: [
-                        string(name: 'DOCKER_TAG', value: env.APP_VERSION),
-                        string(name: 'SERVICE_NAME', value: 'backend')
-                    ]
-                }
+                // Trigger the single CD Job with both tags
+                echo "Triggering CD Pipeline for FitVerse Release..."
+                build job: "FitVerse-CD", parameters: [
+                    string(name: 'BACKEND_IMAGE_TAG', value: env.BE_VERSION),
+                    string(name: 'FRONTEND_IMAGE_TAG', value: env.FE_VERSION)
+                ]
             }
-         }
-         failure {
+        }
+        failure {
             script {
                 notify('FAILURE', 'dulalrupesh77@gmail.com')
             }
-         }
+        }
     }
 }

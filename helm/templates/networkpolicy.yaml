@@ -1,26 +1,21 @@
-# 1. Default deny all ingress traffic
+{{- if .Values.createSharedResources }}
+# 1. Default deny all ingress traffic (Shared Resource)
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ .Chart.Name }}-default-deny
   namespace: {{ .Release.Namespace }}
-  labels:
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   podSelector: {}
   policyTypes:
     - Ingress
 ---
-# 2. Allow backend to database
+# 2. Allow backend to database (Shared Resource)
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ .Chart.Name }}-allow-backend-to-db
   namespace: {{ .Release.Namespace }}
-  labels:
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   podSelector:
     matchLabels:
@@ -33,16 +28,17 @@ spec:
       ports:
         - protocol: TCP
           port: {{ .Values.mysql.service.port }}
+{{- end }}
+
 ---
-# 3. Allow frontend to backend
+
+# 3. Allow frontend to backend (Only if Backend is active)
+{{- if .Values.backend.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ .Chart.Name }}-allow-frontend-to-backend
   namespace: {{ .Release.Namespace }}
-  labels:
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   podSelector:
     matchLabels:
@@ -55,16 +51,17 @@ spec:
       ports:
         - protocol: TCP
           port: {{ .Values.backend.service.containerPort }}
+{{- end }}
+
 ---
-# 4. Allow ingress-nginx to frontend
+
+# 4. Allow ingress-nginx to frontend (Only if Frontend is active)
+{{- if .Values.frontend.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ .Chart.Name }}-allow-ingress-frontend
   namespace: {{ .Release.Namespace }}
-  labels:
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   podSelector:
     matchLabels:
@@ -73,8 +70,8 @@ spec:
     - from:
         - namespaceSelector:
             matchLabels:
-              # Updated to standard K8s label for namespace matching
               kubernetes.io/metadata.name: ingress-nginx
       ports:
         - protocol: TCP
           port: {{ .Values.frontend.service.containerPort }}
+{{- end }}

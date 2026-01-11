@@ -4,14 +4,13 @@ pipeline {
     agent any
 
     parameters {
-        string(name: 'DOCKER_TAG', defaultValue: '', description: 'Tag passed from CI Job')
-        string(name: 'SERVICE_NAME', defaultValue: 'backend', description: 'backend or frontend')
+        string(name: 'FRONTEND_IMAGE_TAG', defaultValue: 'latest', description: 'Frontend image tag.')
+        string(name: 'BACKEND_IMAGE_TAG', defaultValue: 'latest', description: 'Backend image tag.')
     }
 
     environment {
         GIT_URL          = "https://github.com/rupesh-hub/FitVerse-2026-01-01.git"
         GIT_BRANCH       = "main"
-        DOCKERHUB_USER   = "rupesh1997"
         GIT_CRED_ID      = "git-ssh-cred"
         TARGET_NS        = "fitverse"
     }
@@ -19,7 +18,6 @@ pipeline {
     stages {
         stage('Checkout repository') {
             steps {
-                // Pulls the latest Helm files from the repo
                 checkoutRepository(env.GIT_URL, env.GIT_BRANCH, env.GIT_CRED_ID)
             }
         }
@@ -27,58 +25,79 @@ pipeline {
         stage('Update manifests') {
             steps {
                 script {
-                    if (!params.DOCKER_TAG) {
-                        error "Deployment aborted: DOCKER_TAG is missing!"
-                    }
                     updateManifests(
-                        serviceName: params.SERVICE_NAME,
-                        version: params.DOCKER_TAG,
-                        dockerUser: env.DOCKERHUB_USER,
-                        gitCredentialsId: env.GIT_CRED_ID
+                        gitCredentialsId: env.GIT_CRED_ID,
+                        services: [
+                            [
+                                dockerName: 'fitverse-backend',
+                                helmName: 'backend',
+                                tag: params.BACKEND_IMAGE_TAG
+                            ],
+                            [
+                                dockerName: 'fitverse-frontend',
+                                helmName: 'frontend',
+                                tag: params.FRONTEND_IMAGE_TAG
+                            ]
+                        ]
                     )
+                }
+            }
+        }
+
+        stage('Deploy: Helm') {
+            steps {
+                withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG_FILE')]) {
+                    sh """
+                        # We use the Helm Keys here (backend and frontend)
+                        helm upgrade --install fitverse ./helm \
+                            --namespace ${env.TARGET_NS} \
+                            --set backend.image.tag=${params.BACKEND_IMAGE_TAG} \
+                            --set frontend.image.tag=${params.FRONTEND_IMAGE_TAG} \
+                            --kubeconfig \$KUBECONFIG_FILE
+                    """
                 }
             }
         }
 
         stage('Deploy: Helm (Kubernetes)') {
             steps {
-                                    withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG_FILE')]) {
-                                        script {
-                                            echo "Deploying ${params.SERVICE_NAME}:${params.DOCKER_TAG} to Namespace: ${env.TARGET_NS}..."
+                withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG_FILE')]) {
+                    script {
+                        echo "Deploying FitVerse to Namespace: ${env.TARGET_NS}..."
 
-                                            sh """#!/bin/bash
-                                                # 1. Check if namespace exists and is managed by Helm correctly
-                                                if kubectl --kubeconfig \$KUBECONFIG_FILE get namespace ${env.TARGET_NS} >/dev/null 2>&1; then
-                                                    MANAGED_BY=\$(kubectl --kubeconfig \$KUBECONFIG_FILE get namespace ${env.TARGET_NS} -o jsonpath='{.metadata.labels.app\\.kubernetes\\.io/managed-by}' || echo "none")
+                        sh """#!/bin/bash
+                            # 1. Namespace Management
+                            if kubectl --kubeconfig \$KUBECONFIG_FILE get namespace ${env.TARGET_NS} >/dev/null 2>&1; then
+                                MANAGED_BY=\$(kubectl --kubeconfig \$KUBECONFIG_FILE get namespace ${env.TARGET_NS} -o jsonpath='{.metadata.labels.app\\.kubernetes\\.io/managed-by}' || echo "none")
+                                if [ "\$MANAGED_BY" != "Helm" ] && [ "\$MANAGED_BY" != "none" ]; then
+                                    echo "Warning: Namespace exists but managed by \$MANAGED_BY"
+                                fi
+                            fi
 
-                                                    # If it's a legacy namespace not created by Helm, we clean it
-                                                    if [ "\$MANAGED_BY" != "Helm" ]; then
-                                                        echo "Found unmanaged namespace. Deleting for clean Helm install..."
-                                                        kubectl --kubeconfig \$KUBECONFIG_FILE delete namespace ${env.TARGET_NS} --wait=true
-                                                    fi
-                                                fi
-
-                                                # 2. Helm Deployment
-                                                # Note: Ensure you removed namespace.yaml from your helm templates!
-                                                helm upgrade --install fitverse-${params.SERVICE_NAME} ./helm \
-                                                    --namespace ${env.TARGET_NS} \
-                                                    --create-namespace \
-                                                    --set ${params.SERVICE_NAME}.image.tag=${params.DOCKER_TAG} \
-                                                    --kubeconfig \$KUBECONFIG_FILE \
-                                                    --rollback-on-failure \
-                                                    --timeout 5m
-                                            """
-                                        }
-                                    }
-                                }
-                            }
+                            # 2. Helm Deployment
+                            # We use --set to ensure the specific tags from parameters are applied even if values.yaml update failed
+                            helm upgrade --install fitverse ./helm \
+                                --namespace ${env.TARGET_NS} \
+                                --create-namespace \
+                                --set frontend.image.tag=${params.FRONTEND_IMAGE_TAG} \
+                                --set backend.image.tag=${params.BACKEND_IMAGE_TAG} \
+                                --kubeconfig \$KUBECONFIG_FILE \
+                                --rollback-on-failure \
+                                --timeout 5m
+                        """
+                    }
+                }
+            }
+        }
 
         stage('Verify Deployment') {
             steps {
                 withCredentials([file(credentialsId: 'k8s-config', variable: 'KUBECONFIG_FILE')]) {
                     sh """
                         echo "--- Current Status in ${env.TARGET_NS} ---"
-                        kubectl --kubeconfig \$KUBECONFIG_FILE get pods,svc -n ${env.TARGET_NS} -l "app.kubernetes.io/instance=fitverse-${params.SERVICE_NAME}"
+                        kubectl --kubeconfig \$KUBECONFIG_FILE get pods,svc -n ${env.TARGET_NS}
+                        kubectl --kubeconfig \$KUBECONFIG_FILE rollout status deployment/fitverse-backend -n ${env.TARGET_NS}
+                        kubectl --kubeconfig \$KUBECONFIG_FILE rollout status deployment/fitverse-frontend -n ${env.TARGET_NS}
                     """
                 }
             }
@@ -88,12 +107,6 @@ pipeline {
     post {
         always {
             cleanWs()
-        }
-        success {
-            echo "Deployment of ${params.SERVICE_NAME}:${params.DOCKER_TAG} successful!"
-        }
-        failure {
-            echo "Deployment failed. Check Helm logs and K8s events."
         }
     }
 }

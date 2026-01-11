@@ -3,19 +3,8 @@
 pipeline {
     agent any
 
-    environment {
-        GIT_URL          = "https://github.com/rupesh-hub/FitVerse-2026-01-01.git"
-        GIT_BRANCH       = "main"
-        PROJECT_PATH     = "frontend"
-        DOCKERFILE_PATH  = "../docker/frontend/Dockerfile"
-        DOCKERHUB_REPO   = "rupesh1997/fitverse-frontend"
-        SONAR_API_ENV    = "SonarQube"
-    }
-
     stages {
-        stage("Workspace Cleanup") {
-            steps { cleanWs() }
-        }
+
 
         stage('Checkout & Versioning') {
             steps {
